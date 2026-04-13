@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>知らないとやばい、今すぐ体感せよ ― AIエージェントってなんだ？</title>
+<meta name="description" content="2026年は自動化の時代。その入り口を90分で体感する無料オンラインセミナー。4/20(月) 20:00-22:00 開催。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;700;900&family=Barlow+Condensed:wght@400;700&family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000000;
+    --white:#f0f0fa;
+    --white-70:rgba(240,240,250,.7);
+    --white-50:rgba(240,240,250,.5);
+    --white-35:rgba(240,240,250,.35);
+    --white-10:rgba(240,240,250,.1);
+    --overlay:rgba(0,0,0,.55);
+    --display:"Barlow Condensed","Oswald","Barlow",sans-serif;
+    --body:"Barlow",-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{background:var(--black);color:var(--white);font-family:var(--body);-webkit-font-smoothing:antialiased}
+  body{font-size:16px;line-height:1.6;overflow-x:hidden;font-feature-settings:"palt";letter-spacing:.02em}
+  a{color:inherit;text-decoration:none;transition:color .3s,background .3s}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--white);color:var(--black)}
+
+  /* =========================================================
+     NAV
+  ========================================================= */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:28px 48px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0));
+  }
+  .brand{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:2.4px;
+    color:var(--white);
+  }
+  .brand .sep{opacity:.35;margin:0 10px}
+  .nav-links{display:flex;gap:36px;align-items:center}
+  .nav-links a{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+    color:var(--white);
+  }
+  .nav-links a:hover{color:var(--white-50)}
+  .nav-cta{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+    padding:12px 22px;
+    border:1px solid var(--white-35);
+    background:var(--white-10);
+    border-radius:32px;
+    backdrop-filter:blur(8px);
+  }
+  .nav-cta:hover{background:rgba(240,240,250,.2);color:var(--white)}
+  @media(max-width:780px){
+    nav{padding:20px 24px}
+    .nav-links{display:none}
+  }
+
+  /* =========================================================
+     SCENE SYSTEM
+  ========================================================= */
+  .scene{
+    position:relative;
+    min-height:100vh;
+    width:100%;
+    display:flex;
+    align-items:flex-end;
+    overflow:hidden;
+    background:var(--black);
+  }
+  .scene-bg{
+    position:absolute;inset:0;
+    background-size:cover;
+    background-position:center;
+    filter:contrast(1.05) saturate(.85);
+    z-index:0;
+    transform:scale(1.05);
+  }
+  .scene-overlay{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(to top, rgba(0,0,0,.92) 0%, rgba(0,0,0,.55) 40%, rgba(0,0,0,.3) 70%, rgba(0,0,0,.7) 100%);
+    z-index:1;
+  }
+  .scene-inner{
+    position:relative;z-index:2;
+    width:100%;
+    padding:0 72px 120px;
+  }
+  @media(max-width:780px){
+    .scene-inner{padding:0 24px 80px}
+  }
+
+  /* Scene indicator (top-left, aerospace HUD style) */
+  .indicator{
+    position:absolute;
+    top:140px;left:72px;z-index:2;
+    font-family:var(--display);
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--white-70);
+    display:flex;align-items:center;gap:16px;
+  }
+  .indicator::before{content:"";width:56px;height:1px;background:var(--white-35);display:inline-block}
+  @media(max-width:780px){.indicator{top:100px;left:24px}}
+
+  /* =========================================================
+     TYPOGRAPHY
+  ========================================================= */
+  .eyebrow{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:2.4px;
+    text-transform:uppercase;
+    color:var(--white);
+    margin-bottom:28px;
+    display:inline-block;
+  }
+  @keyframes mega-flicker{
+    0%,100%{opacity:1;text-shadow:0 0 10px rgba(255,255,255,.6),0 0 40px rgba(120,180,255,.4),0 0 80px rgba(120,180,255,.2)}
+    5%{opacity:.85;text-shadow:0 0 5px rgba(255,255,255,.3),0 0 20px rgba(120,180,255,.2)}
+    10%{opacity:1;text-shadow:0 0 15px rgba(255,255,255,.8),0 0 50px rgba(120,180,255,.5),0 0 100px rgba(120,180,255,.3)}
+    15%{opacity:.92}
+    50%{text-shadow:0 0 20px rgba(255,255,255,.9),0 0 60px rgba(100,160,255,.6),0 0 120px rgba(100,160,255,.3),0 0 200px rgba(80,140,255,.15)}
+    52%{opacity:.88}
+    53%{opacity:1}
+  }
+  h1.mega{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(56px,11vw,188px);
+    line-height:.95;
+    letter-spacing:-.005em;
+    text-transform:uppercase;
+    margin-bottom:32px;
+    padding-bottom:8px;
+    color:#fff;
+    text-shadow:0 0 10px rgba(255,255,255,.6),0 0 40px rgba(120,180,255,.4),0 0 80px rgba(120,180,255,.2);
+    animation:mega-flicker 4s ease-in-out infinite;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
+  }
+  h1.mega .jp{
+    display:block;
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    letter-spacing:.04em;
+    font-weight:900;
+  }
+  h2.headline{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(40px,7vw,110px);
+    line-height:.92;
+    letter-spacing:.01em;
+    text-transform:uppercase;
+    color:var(--white);
+    margin-bottom:32px;
+  }
+  h2.headline .jp{
+    display:block;
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-weight:900;
+    letter-spacing:.04em;
+  }
+  h2.headline .muted{color:var(--white-35)}
+  .lead{
+    font-family:var(--body);
+    font-size:clamp(15px,1.4vw,18px);
+    line-height:1.75;
+    color:var(--white-70);
+    max-width:560px;
+    margin-bottom:40px;
+    letter-spacing:.02em;
+  }
+  .lead strong{color:var(--white);font-weight:500}
+
+  /* Data strip under hero: date/time/venue/fee (HUD row) */
+  @keyframes glow-pulse{
+    0%,100%{box-shadow:0 0 20px rgba(255,255,255,.15),0 0 60px rgba(255,255,255,.05),inset 0 0 30px rgba(255,255,255,.03)}
+    50%{box-shadow:0 0 30px rgba(255,255,255,.3),0 0 80px rgba(255,255,255,.1),inset 0 0 40px rgba(255,255,255,.06)}
+  }
+  @keyframes shimmer{
+    0%{background-position:-200% center}
+    100%{background-position:200% center}
+  }
+  .hud-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:48px 64px;
+    padding:40px 48px;
+    border:1px solid rgba(255,255,255,.25);
+    margin-bottom:48px;
+    max-width:960px;
+    background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.02) 50%,rgba(255,255,255,.06) 100%);
+    backdrop-filter:blur(12px);
+    animation:glow-pulse 3s ease-in-out infinite;
+  }
+  .hud-row .cell{display:flex;flex-direction:column;gap:8px}
+  .hud-row .label{
+    font-family:var(--display);font-weight:700;
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    color:rgba(255,255,255,.6);
+  }
+  .hud-row .value{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(22px,2.8vw,34px);letter-spacing:1.4px;
+    text-transform:uppercase;
+    background:linear-gradient(90deg,#fff 0%,rgba(200,220,255,.7) 40%,#fff 50%,rgba(200,220,255,.7) 60%,#fff 100%);
+    background-size:200% auto;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+    animation:shimmer 4s linear infinite;
+  }
+
+  /* Ghost button */
+  .btn{
+    display:inline-flex;align-items:center;gap:14px;
+    font-family:var(--display);font-weight:700;
+    font-size:13px;letter-spacing:2px;text-transform:uppercase;
+    padding:18px 34px;
+    border-radius:32px;
+    border:1px solid var(--white-35);
+    background:var(--white-10);
+    color:var(--white);
+    backdrop-filter:blur(6px);
+    transition:all .3s ease;
+  }
+  .btn:hover{background:rgba(240,240,250,.22);border-color:var(--white);color:var(--white)}
+  .btn .arrow{display:inline-block;transition:transform .3s}
+  .btn:hover .arrow{transform:translateX(6px)}
+  .btn-row{display:flex;flex-wrap:wrap;gap:16px}
+
+  /* Scroll cue */
+  .scroll-cue{
+    position:absolute;
+    bottom:36px;
+    left:50%;transform:translateX(-50%);
+    z-index:3;
+    font-family:var(--display);font-weight:700;
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--white-50);
+    display:flex;flex-direction:column;align-items:center;gap:14px;
+  }
+  .scroll-cue .line{width:1px;height:44px;background:var(--white-35);position:relative;overflow:hidden}
+  .scroll-cue .line::after{
+    content:"";position:absolute;top:-44px;left:0;width:100%;height:44px;
+    background:var(--white);
+    animation:scroll-line 2.4s ease-in-out infinite;
+  }
+  @keyframes scroll-line{
+    0%{top:-44px}100%{top:44px}
+  }
+
+  /* Reveal */
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity 1.1s ease,transform 1.1s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* =========================================================
+     PROGRAM SCENE (rows over photography — no cards)
+  ========================================================= */
+  .program-list{max-width:980px;border-top:1px solid var(--white-35)}
+  .program-list .row{
+    display:grid;
+    grid-template-columns:180px 1fr auto;
+    gap:32px;
+    align-items:baseline;
+    padding:26px 0;
+    border-bottom:1px solid var(--white-35);
+    transition:padding-left .3s;
+  }
+  .program-list .row:hover{padding-left:12px}
+  .program-list .time{
+    font-family:var(--display);font-weight:700;
+    font-size:16px;letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--white);
+  }
+  .program-list .title{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:17px;font-weight:500;color:var(--white);line-height:1.5;
+  }
+  .program-list .tag{
+    font-family:var(--display);font-weight:700;
+    font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--white-50);
+  }
+  @media(max-width:780px){
+    .program-list .row{grid-template-columns:1fr;gap:6px;padding:20px 0}
+    .program-list .title{font-size:15px}
+  }
+
+  /* =========================================================
+     WARNING SCENE (big numbered statements, no boxes)
+  ========================================================= */
+  .warnings{max-width:1100px}
+  .warnings .line{
+    display:grid;
+    grid-template-columns:72px 1fr;
+    gap:28px;
+    align-items:baseline;
+    padding:28px 0;
+    border-top:1px solid var(--white-35);
+  }
+  .warnings .line:last-child{border-bottom:1px solid var(--white-35)}
+  .warnings .n{
+    font-family:var(--display);font-weight:700;
+    font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--white-50);
+  }
+  .warnings .t{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:clamp(18px,2.2vw,26px);
+    font-weight:500;
+    line-height:1.55;
+    color:var(--white);
+  }
+  @media(max-width:780px){
+    .warnings .line{grid-template-columns:52px 1fr;gap:16px;padding:20px 0}
+  }
+
+  /* =========================================================
+     SPEAKER SCENE
+  ========================================================= */
+  .speaker-block{max-width:980px;display:grid;grid-template-columns:1fr 1.3fr;gap:64px;align-items:start;padding:48px 0;border-top:1px solid var(--white-35);border-bottom:1px solid var(--white-35)}
+  .speaker-block .role{
+    font-family:var(--display);font-weight:700;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--white-50);margin-bottom:16px;
+  }
+  .speaker-block .name{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(38px,5vw,72px);
+    line-height:.9;letter-spacing:.01em;
+    text-transform:uppercase;color:var(--white);margin-bottom:10px;
+  }
+  .speaker-block .name-jp{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-weight:700;font-size:18px;letter-spacing:.08em;
+    color:var(--white-70);margin-bottom:28px;
+  }
+  .speaker-block .org{
+    font-family:var(--display);font-weight:700;font-size:12px;
+    letter-spacing:1.6px;text-transform:uppercase;color:var(--white);
+    padding-top:20px;border-top:1px solid var(--white-35);
+  }
+  .speaker-block .org small{display:block;color:var(--white-50);font-weight:400;margin-top:4px}
+  .speaker-block .bio{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:16px;line-height:1.9;color:var(--white-70);
+  }
+  .speaker-block .bio p+p{margin-top:18px}
+  .speaker-block .bio strong{color:var(--white);font-weight:600}
+  @media(max-width:900px){
+    .speaker-block{grid-template-columns:1fr;gap:32px}
+  }
+
+  /* =========================================================
+     FAQ (minimal, no cards)
+  ========================================================= */
+  .faq{max-width:900px;border-top:1px solid var(--white-35)}
+  .faq details{border-bottom:1px solid var(--white-35)}
+  .faq summary{
+    list-style:none;cursor:pointer;
+    padding:26px 0;
+    display:flex;justify-content:space-between;align-items:center;gap:24px;
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:17px;font-weight:500;color:var(--white);
+    transition:color .2s;
+  }
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary:hover{color:var(--white-50)}
+  .faq summary .q::before{
+    content:"Q";font-family:var(--display);font-weight:700;
+    color:var(--white-50);margin-right:18px;letter-spacing:1.6px;
+  }
+  .faq summary .plus{
+    font-family:var(--display);font-weight:300;
+    font-size:28px;color:var(--white-50);
+    transition:transform .3s;line-height:1;
+  }
+  .faq details[open] summary .plus{transform:rotate(45deg);color:var(--white)}
+  .faq details p{
+    padding:0 0 28px 38px;
+    color:var(--white-70);line-height:1.85;font-size:15px;max-width:780px;
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+  }
+
+  /* =========================================================
+     SPEAKER INTRO (split layout — text left / photo right)
+  ========================================================= */
+  .speaker-intro{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    min-height:100vh;
+    background:var(--black);
+    position:relative;
+  }
+  .speaker-intro .text{
+    padding:120px 72px;
+    display:flex;flex-direction:column;justify-content:center;
+    position:relative;
+  }
+  .speaker-intro .indicator-static{
+    font-family:var(--display);font-weight:700;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--white-70);
+    display:flex;align-items:center;gap:16px;
+    margin-bottom:40px;
+  }
+  .speaker-intro .indicator-static::before{content:"";width:56px;height:1px;background:var(--white-35)}
+  .speaker-intro .role-label{
+    font-family:var(--display);font-weight:700;
+    font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--white-50);margin-bottom:20px;
+  }
+  .speaker-intro .name-en{
+    font-family:var(--display);font-weight:700;
+    font-size:clamp(42px,5.5vw,88px);
+    line-height:.88;letter-spacing:.005em;text-transform:uppercase;
+    color:var(--white);margin-bottom:14px;
+  }
+  .speaker-intro .name-jp{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-weight:700;font-size:20px;letter-spacing:.12em;
+    color:var(--white-70);margin-bottom:40px;
+  }
+  .speaker-intro .divider{
+    width:72px;height:2px;background:var(--white);margin-bottom:36px;
+  }
+  .speaker-intro .bio{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-size:16px;line-height:2;color:var(--white-70);
+    max-width:520px;
+  }
+  .speaker-intro .bio p+p{margin-top:20px}
+  .speaker-intro .bio strong{color:var(--white);font-weight:600}
+  .speaker-intro .org-line{
+    margin-top:40px;padding-top:28px;
+    border-top:1px solid var(--white-35);
+    font-family:var(--display);font-weight:700;font-size:13px;
+    letter-spacing:1.8px;text-transform:uppercase;color:var(--white);
+    max-width:520px;
+  }
+  .speaker-intro .org-line small{
+    display:block;color:var(--white-50);font-weight:400;
+    margin-top:6px;letter-spacing:1.4px;
+  }
+  .speaker-intro .photo{
+    position:relative;
+    background:#0a0a0a;
+    overflow:hidden;
+  }
+  .speaker-intro .photo img{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    object-position:center top;
+    filter:contrast(1.05) saturate(.95);
+  }
+  .speaker-intro .photo::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(to left,rgba(0,0,0,0) 60%,rgba(0,0,0,.5) 100%);
+    pointer-events:none;
+  }
+  .speaker-intro .photo .photo-tag{
+    position:absolute;bottom:40px;right:40px;z-index:2;
+    font-family:var(--display);font-weight:700;
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--white-70);
+    display:flex;align-items:center;gap:12px;
+  }
+  .speaker-intro .photo .photo-tag::before{content:"";width:32px;height:1px;background:var(--white-35);display:inline-block}
+  @media(max-width:900px){
+    .speaker-intro{grid-template-columns:1fr;min-height:auto}
+    .speaker-intro .text{padding:80px 24px;order:2}
+    .speaker-intro .photo{order:1;min-height:70vh}
+  }
+
+  /* =========================================================
+     FOOTER
+  ========================================================= */
+  footer{
+    background:var(--black);
+    padding:60px 72px 40px;
+    border-top:1px solid var(--white-10);
+  }
+  footer .inner{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;
+    font-family:var(--display);font-weight:700;
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--white-50);
+  }
+  @media(max-width:780px){footer{padding:40px 24px 32px}}
+
+  /* Slow ken-burns on bg */
+  @keyframes kenburns{
+    0%{transform:scale(1.05) translate(0,0)}
+    100%{transform:scale(1.14) translate(-1%,-1%)}
+  }
+  .scene-bg.animate{animation:kenburns 24s ease-out forwards}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">NOVALIS<span class="sep">/</span>AI SEMINAR 2026</div>
+  <div class="nav-links">
+    <a href="#warning">WARNING</a>
+    <a href="#era">ERA</a>
+    <a href="#program">PROGRAM</a>
+    <a href="#speaker">SPEAKER</a>
+  </div>
+</nav>
+
+<!-- ====== SCENE 01 / HERO ====== -->
+<section class="scene" id="hero">
+  <div class="scene-bg animate" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">2026.04.20 &nbsp;/&nbsp; LIVE ONLINE &nbsp;/&nbsp; FREE</div>
+    <h1 class="mega reveal">
+      <span class="jp">AIエージェント</span>
+      <span class="jp">を体感せよ</span>
+    </h1>
+    <p class="lead reveal">
+      <strong>2026年は、自動化の時代。</strong><br>
+      ChatGPTに"質問する"時代は、もう終わった。<br>
+      これから来るのは、AIが自ら調べ、動き、仕事を片づける世界。<br>
+      その入り口を、たった90分で体感せよ。
+    </p>
+
+    <div class="hud-row reveal">
+      <div class="cell"><span class="label">DATE</span><span class="value">04.20 / MON</span></div>
+      <div class="cell"><span class="label">TIME</span><span class="value">20:00—22:00</span></div>
+      <div class="cell"><span class="label">VENUE</span><span class="value">ONLINE / ZOOM</span></div>
+      <div class="cell"><span class="label">FEE</span><span class="value">FREE</span></div>
+    </div>
+
+    <div class="btn-row reveal">
+      <a href="#warning" class="btn">LEARN MORE</a>
+    </div>
+  </div>
+
+  <div class="scroll-cue">SCROLL<div class="line"></div></div>
+</section>
+
+<!-- ====== SCENE 02 / WARNING ====== -->
+<section class="scene" id="warning">
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">— STATUS REPORT</div>
+    <h2 class="headline reveal">
+      <span>STILL JUST</span>
+      <span>ASKING AI?</span>
+      <span class="jp">まだ"聞くだけ"で止まっていないか。</span>
+    </h2>
+    <p class="lead reveal">正直に答えてほしい。ひとつでも当てはまるなら、このセミナーはあなたのためのものだ。</p>
+
+    <div class="warnings reveal">
+      <div class="line"><div class="n">— 01</div><div class="t">ChatGPTは触っている。でも結局、"質問する道具"で止まっている。</div></div>
+      <div class="line"><div class="n">— 02</div><div class="t">「AIエージェント」「Computer Use」と聞くが、正直よく分からない。</div></div>
+      <div class="line"><div class="n">— 03</div><div class="t">周りが「AIで業務が半分になった」と言い始めていて、焦りがある。</div></div>
+      <div class="line"><div class="n">— 04</div><div class="t">業務効率化を本気でやりたいが、何から手をつけるべきか分からない。</div></div>
+      <div class="line"><div class="n">— 05</div><div class="t">2026年という分岐点で、時代に置いていかれたくない。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SCENE 03 / ERA ====== -->
+<section class="scene" id="era">
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">— 2026 / THE TURNING POINT</div>
+    <h2 class="headline reveal">
+      <span>FROM "ASK"</span>
+      <span>TO "WORK".</span>
+      <span class="jp">AIは、動く時代へ。</span>
+    </h2>
+    <p class="lead reveal" style="max-width:680px">
+      2025年後半、AIは静かに、しかし決定的に進化した。ブラウザを自分で操作するAI、PCの画面を見て動くAI、メールを書き、予約を取り、資料を作るAI ― <strong>いわゆる「AIエージェント」</strong>が、エンジニアでなくても使える段階に入った。これは"未来の話"ではなく、<strong>今この瞬間、起きていること</strong>。知る者と知らない者の差は、半年で取り返しのつかない大きさになる。
+    </p>
+
+    <div class="btn-row reveal">
+      <a href="#program" class="btn">プログラムを見る <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SCENE 04 / PROGRAM ====== -->
+<section class="scene" id="program">
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1534996858221-380b92700493?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">— 120 MIN / 6 SEQUENCES</div>
+    <h2 class="headline reveal">
+      <span>THE MISSION.</span>
+      <span class="jp">90分で、AIに仕事を任せる感覚を掴む。</span>
+    </h2>
+
+    <div class="program-list reveal">
+      <div class="row"><div class="time">20:00—20:10</div><div class="title">なぜ今、AIエージェントなのか ― 2026年の地殻変動</div><div class="tag">OPENING</div></div>
+      <div class="row"><div class="time">20:10—20:35</div><div class="title">AIがブラウザを操作する ― リサーチから資料化までの完全自動化</div><div class="tag">DEMO 01</div></div>
+      <div class="row"><div class="time">20:35—21:00</div><div class="title">メール・議事録・事務作業を任せる ― 日常業務の自動化</div><div class="tag">DEMO 02</div></div>
+      <div class="row"><div class="time">21:00—21:25</div><div class="title">業種別ユースケース ― 営業 / 事務 / 建設現場での実践</div><div class="tag">USE CASE</div></div>
+      <div class="row"><div class="time">21:25—21:45</div><div class="title">はじめ方ロードマップ ― 失敗しないための注意点</div><div class="tag">ROADMAP</div></div>
+      <div class="row"><div class="time">21:45—22:00</div><div class="title">質疑応答 ― その場で疑問にすべて答える</div><div class="tag">Q &amp; A</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SCENE 05 / SPEAKER ====== -->
+<section class="scene" id="speaker">
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1520869562399-e772f042f422?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">— ON THE STAGE</div>
+    <h2 class="headline reveal">
+      <span>FROM THE</span>
+      <span>FIELD.</span>
+      <span class="jp">現場の言葉で、AIを語る人間。</span>
+    </h2>
+
+    <div class="speaker-block reveal">
+      <div>
+        <div class="role">SPEAKER / CAIO</div>
+        <div class="name">SHUNSUKE<br>TANAKA</div>
+        <div class="name-jp">田中 俊輔</div>
+        <div class="org">
+          NOVALIS INC.
+          <small>AI事業責任者 (CAIO) ／ 代表 宮澤隆平</small>
+        </div>
+      </div>
+      <div class="bio">
+        <p>リフォーム会社の営業から独立し、<strong>建設業の現場経験 × AI活用</strong>を軸に活動。「専門用語を使わずに、現場の言葉でAIを語れる」ことを強みに、経営者・個人事業主・非エンジニア層への導入支援を行う。</p>
+        <p>株式会社ノヴァリスでは、代表・宮澤隆平のもとで<strong>AI事業を統括</strong>。"AIに詳しい人"ではなく、"現場を知った上でAIを使う人間"として、机上論ではない実装の現実をそのまま伝える。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SCENE 06 / FINAL ====== -->
+<section class="scene" id="apply">
+  <div class="scene-bg animate" style="background-image:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">— APPLY NOW</div>
+    <h1 class="mega reveal" style="font-size:clamp(56px,10vw,168px)">
+      <span>DON'T GET</span>
+      <span>LEFT BEHIND.</span>
+      <span class="jp">半年後、後悔しないために。</span>
+    </h1>
+    <p class="lead reveal">
+      2026年は、自動化の年。<br>
+      その入り口を、まずは90分だけ覗きに来てほしい。<br>
+      <strong>無料。失うものは、何もない。</strong>
+    </p>
+
+    <div class="hud-row reveal">
+      <div class="cell"><span class="label">DATE</span><span class="value">04.20 / MON</span></div>
+      <div class="cell"><span class="label">TIME</span><span class="value">20:00—22:00 JST</span></div>
+      <div class="cell"><span class="label">VENUE</span><span class="value">ONLINE / ZOOM</span></div>
+      <div class="cell"><span class="label">FEE</span><span class="value">FREE</span></div>
+    </div>
+
+
+    <div style="margin-top:60px;max-width:900px">
+      <div class="faq reveal">
+        <details>
+          <summary><span class="q">ChatGPTもあまり触ったことがないのですが、大丈夫ですか？</span><span class="plus">+</span></summary>
+          <p>大丈夫です。デモ中心の構成なので、"見て理解する"ところから始められます。専門用語は最小限に抑え、現場の言葉でお伝えします。</p>
+        </details>
+        <details>
+          <summary><span class="q">録画視聴はできますか？</span><span class="plus">+</span></summary>
+          <p>当日のライブ参加のみとなります。見逃し配信はありません。</p>
+        </details>
+        <details>
+          <summary><span class="q">紹介されるツールは有料ですか？</span><span class="plus">+</span></summary>
+          <p>無料で始められるツールを中心にご紹介します。有料ツールを扱う場合も、無料版の試し方から丁寧にお伝えします。</p>
+        </details>
+        <details>
+          <summary><span class="q">セミナー中に営業されますか？</span><span class="plus">+</span></summary>
+          <p>個別相談のご案内はいたしますが、強引な営業や高額商品の販売は一切ありません。安心してご参加ください。</p>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== SPEAKER INTRO (split layout) ====== -->
+<section class="speaker-intro" id="speaker-intro">
+  <div class="text reveal">
+    <div class="indicator-static">— &nbsp;ABOUT THE SPEAKER</div>
+    <div class="role-label">CAIO &nbsp;/&nbsp; AI実務家 &nbsp;/&nbsp; 建設業出身</div>
+    <div class="name-en">SHUNSUKE<br>TANAKA</div>
+    <div class="name-jp">田中 俊輔</div>
+    <div class="divider"></div>
+    <div class="bio">
+      <p>リフォーム専門会社の営業マンとして社会人キャリアをスタート。現場での顧客折衝・見積・施工管理を経て独立し、<strong>建設業の現場経験とAI活用を両立する実務家</strong>として活動している。</p>
+      <p>現在は株式会社ノヴァリスの <strong>AI事業責任者(CAIO)</strong> として、代表・宮澤隆平のもとでAI事業を統括。"AIに詳しい人"ではなく、<strong>"現場を知った上でAIを使う人間"</strong> として、経営者・個人事業主・非エンジニア層に向けた導入支援・セミナー登壇・業務設計を手がける。</p>
+      <p>机上論ではなく「実際にやってみてどうだったか」を、現場の言葉でそのまま伝えることを信条としている。</p>
+    </div>
+    <div class="org-line">
+      NOVALIS INC.
+      <small>AI事業責任者 (CAIO) &nbsp;/&nbsp; 代表 宮澤隆平</small>
+    </div>
+  </div>
+  <div class="photo">
+    <img src="assets/speaker.png" alt="田中俊輔 / SHUNSUKE TANAKA" />
+    <div class="photo-tag">SHUNSUKE TANAKA / CAIO</div>
+  </div>
+</section>
+
+<footer>
+  <div class="inner">
+    <div>© 2026 NOVALIS INC. / AI SEMINAR</div>
+    <div>PRIVACY &nbsp;·&nbsp; CONTACT &nbsp;·&nbsp; #AIAGENT2026</div>
+  </div>
+  <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(240,240,250,.08);font-family:'Barlow Condensed','Oswald',sans-serif;font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(240,240,250,.35);text-align:center">
+    THIS LANDING PAGE IS ENTIRELY GENERATED BY AI. &nbsp;/&nbsp; このランディングページは、全てAIが作っています。
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{
+    el.style.transitionDelay = (i%6 * 90)+'ms';
+    io.observe(el);
+  });
+
+  // Trigger ken-burns when scene enters viewport
+  const bgIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add('animate');
+    });
+  },{threshold:.2});
+  document.querySelectorAll('.scene-bg').forEach(el=>bgIo.observe(el));
+</script>
+</body>
+</html>
