@@ -35,7 +35,7 @@
     position:fixed;top:0;left:0;right:0;z-index:100;
     padding:28px 48px;
     display:flex;align-items:center;justify-content:space-between;
-    background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0));
+    background:linear-gradient(to bottom,rgba(0,0,0,.75),rgba(0,0,0,0));
   }
   .brand{
     font-family:var(--display);
@@ -64,9 +64,8 @@
     letter-spacing:1.6px;
     padding:12px 22px;
     border:1px solid var(--white-35);
-    background:var(--white-10);
+    background:rgba(0,0,0,.4);
     border-radius:32px;
-    backdrop-filter:blur(8px);
   }
   .nav-cta:hover{background:rgba(240,240,250,.2);color:var(--white)}
   @media(max-width:780px){
@@ -90,9 +89,9 @@
     position:absolute;inset:0;
     background-size:cover;
     background-position:center;
-    filter:contrast(1.05) saturate(.85);
     z-index:0;
-    transform:scale(1.05);
+    transform:scale(1.05) translateZ(0);
+    will-change:transform;
   }
   .scene-overlay{
     position:absolute;inset:0;
@@ -137,15 +136,6 @@
     margin-bottom:28px;
     display:inline-block;
   }
-  @keyframes mega-flicker{
-    0%,100%{opacity:1;text-shadow:0 0 10px rgba(255,255,255,.6),0 0 40px rgba(120,180,255,.4),0 0 80px rgba(120,180,255,.2)}
-    5%{opacity:.85;text-shadow:0 0 5px rgba(255,255,255,.3),0 0 20px rgba(120,180,255,.2)}
-    10%{opacity:1;text-shadow:0 0 15px rgba(255,255,255,.8),0 0 50px rgba(120,180,255,.5),0 0 100px rgba(120,180,255,.3)}
-    15%{opacity:.92}
-    50%{text-shadow:0 0 20px rgba(255,255,255,.9),0 0 60px rgba(100,160,255,.6),0 0 120px rgba(100,160,255,.3),0 0 200px rgba(80,140,255,.15)}
-    52%{opacity:.88}
-    53%{opacity:1}
-  }
   h1.mega{
     font-family:var(--display);
     font-weight:900;
@@ -156,9 +146,13 @@
     margin-bottom:32px;
     padding-bottom:8px;
     color:#fff;
-    text-shadow:0 0 10px rgba(255,255,255,.6),0 0 40px rgba(120,180,255,.4),0 0 80px rgba(120,180,255,.2);
-    animation:mega-flicker 4s ease-in-out infinite;
-    filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));
+    text-shadow:
+      0 0 8px rgba(255,255,255,.55),
+      0 0 24px rgba(140,190,255,.45),
+      0 0 60px rgba(100,160,255,.35),
+      0 2px 4px rgba(0,0,0,.6);
+    transform:translateZ(0);
+    will-change:transform;
   }
   h1.mega .jp{
     display:block;
@@ -195,25 +189,16 @@
   .lead strong{color:var(--white);font-weight:500}
 
   /* Data strip under hero: date/time/venue/fee (HUD row) */
-  @keyframes glow-pulse{
-    0%,100%{box-shadow:0 0 20px rgba(255,255,255,.15),0 0 60px rgba(255,255,255,.05),inset 0 0 30px rgba(255,255,255,.03)}
-    50%{box-shadow:0 0 30px rgba(255,255,255,.3),0 0 80px rgba(255,255,255,.1),inset 0 0 40px rgba(255,255,255,.06)}
-  }
-  @keyframes shimmer{
-    0%{background-position:-200% center}
-    100%{background-position:200% center}
-  }
   .hud-row{
     display:flex;
     flex-wrap:wrap;
     gap:48px 64px;
     padding:40px 48px;
-    border:1px solid rgba(255,255,255,.25);
+    border:1px solid rgba(255,255,255,.28);
     margin-bottom:48px;
     max-width:960px;
-    background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.02) 50%,rgba(255,255,255,.06) 100%);
-    backdrop-filter:blur(12px);
-    animation:glow-pulse 3s ease-in-out infinite;
+    background:rgba(10,12,20,.55);
+    box-shadow:0 0 24px rgba(255,255,255,.12),inset 0 0 30px rgba(255,255,255,.04);
   }
   .hud-row .cell{display:flex;flex-direction:column;gap:8px}
   .hud-row .label{
@@ -225,12 +210,8 @@
     font-family:var(--display);font-weight:900;
     font-size:clamp(22px,2.8vw,34px);letter-spacing:1.4px;
     text-transform:uppercase;
-    background:linear-gradient(90deg,#fff 0%,rgba(200,220,255,.7) 40%,#fff 50%,rgba(200,220,255,.7) 60%,#fff 100%);
-    background-size:200% auto;
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    animation:shimmer 4s linear infinite;
+    color:#fff;
+    text-shadow:0 0 12px rgba(200,220,255,.35);
   }
 
   /* Ghost button */
@@ -241,15 +222,19 @@
     padding:18px 34px;
     border-radius:32px;
     border:1px solid var(--white-35);
-    background:var(--white-10);
+    background:rgba(0,0,0,.35);
     color:var(--white);
-    backdrop-filter:blur(6px);
-    transition:all .3s ease;
+    transition:background .3s ease,border-color .3s ease,color .3s ease;
   }
   .btn:hover{background:rgba(240,240,250,.22);border-color:var(--white);color:var(--white)}
   .btn .arrow{display:inline-block;transition:transform .3s}
   .btn:hover .arrow{transform:translateX(6px)}
-  .btn-row{display:flex;flex-wrap:wrap;gap:16px}
+  .btn-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+  .btn-note{
+    font-family:var(--display);font-weight:700;
+    font-size:11px;letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--white-70);
+  }
 
   /* Scroll cue */
   .scroll-cue{
@@ -273,8 +258,12 @@
   }
 
   /* Reveal */
-  .reveal{opacity:0;transform:translateY(40px);transition:opacity 1.1s ease,transform 1.1s ease}
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease;will-change:opacity,transform}
   .reveal.visible{opacity:1;transform:translateY(0)}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{transition:none;opacity:1;transform:none}
+    .scene-bg.animate{animation:none}
+  }
 
   /* =========================================================
      PROGRAM SCENE (rows over photography — no cards)
@@ -372,6 +361,46 @@
   .speaker-block .bio strong{color:var(--white);font-weight:600}
   @media(max-width:900px){
     .speaker-block{grid-template-columns:1fr;gap:32px}
+  }
+
+  /* =========================================================
+     MADE WITH AI callout
+  ========================================================= */
+  .made-with-ai{
+    max-width:960px;
+    margin:56px 0 48px;
+    padding:36px 48px;
+    border:1px solid rgba(255,255,255,.28);
+    background:rgba(10,12,20,.55);
+    text-align:center;
+    box-shadow:0 0 24px rgba(255,255,255,.1),inset 0 0 30px rgba(255,255,255,.04);
+  }
+  .made-with-ai .tag{
+    font-family:var(--display);font-weight:700;
+    font-size:11px;letter-spacing:2.4px;text-transform:uppercase;
+    color:var(--white-70);
+    display:inline-flex;align-items:center;gap:14px;
+    margin-bottom:18px;
+  }
+  .made-with-ai .tag::before{content:"";width:40px;height:1px;background:var(--white-35);display:inline-block}
+  .made-with-ai .tag::after{content:"";width:40px;height:1px;background:var(--white-35);display:inline-block}
+  .made-with-ai .msg{
+    font-family:"Barlow","Hiragino Sans","Yu Gothic",sans-serif;
+    font-weight:900;
+    font-size:clamp(22px,3vw,36px);
+    line-height:1.4;
+    color:var(--white);
+    letter-spacing:.04em;
+  }
+  .made-with-ai .msg strong{
+    background:linear-gradient(90deg,#fff 0%,#c8dcff 50%,#fff 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    font-weight:900;
+  }
+  @media(max-width:780px){
+    .made-with-ai{padding:28px 24px}
   }
 
   /* =========================================================
@@ -533,20 +562,29 @@
 
 <!-- ====== SCENE 01 / HERO ====== -->
 <section class="scene" id="hero">
-  <div class="scene-bg animate" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-bg animate" style="background-image:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=70&auto=format&fit=crop')"></div>
   <div class="scene-overlay"></div>
 
   <div class="scene-inner">
-    <div class="eyebrow reveal">2026.04.20 &nbsp;/&nbsp; LIVE ONLINE &nbsp;/&nbsp; FREE</div>
+    <div class="eyebrow reveal">2026.04.20 &nbsp;/&nbsp; LIVE ONLINE &nbsp;/&nbsp; FREE &nbsp;/&nbsp; 初心者歓迎</div>
     <h1 class="mega reveal">
       <span class="jp">AIエージェント</span>
       <span class="jp">を体感せよ</span>
     </h1>
     <p class="lead reveal">
-      <strong>2026年は、自動化の時代。</strong><br>
-      ChatGPTに"質問する"時代は、もう終わった。<br>
-      これから来るのは、AIが自ら調べ、動き、仕事を片づける世界。<br>
-      その入り口を、たった90分で体感せよ。
+      <strong>もし、毎日の2時間が、自由になるとしたら。</strong><br>
+      資料作成も、リサーチも、細かな入力作業も ―<br>
+      AIが、あなたの代わりに全部片づけてくれる時代が来ています。<br>
+      しかもそのツールは、<strong>今日から、無料で、誰でも触れる</strong>。<br>
+      これが「AIエージェント」の正体です。<br>
+      <br>
+      この90分で、あなたが持ち帰るのは3つ。<br>
+      <strong>① 今すぐ使える無料ツールの全体像</strong><br>
+      <strong>② 明日から真似できる、具体的な使い方</strong><br>
+      <strong>③「自分にもできる」という確信</strong><br>
+      <br>
+      <strong>「AIに聞く」から「AIがやる」へ。</strong><br>
+      <strong>ぜひ、お気軽にご参加ください。</strong>
     </p>
 
     <div class="hud-row reveal">
@@ -558,6 +596,7 @@
 
     <div class="btn-row reveal">
       <a href="#warning" class="btn">LEARN MORE</a>
+      <span class="btn-note">見るだけでOK &nbsp;/&nbsp; 初心者歓迎 &nbsp;/&nbsp; カメラオフ可</span>
     </div>
   </div>
 
@@ -566,7 +605,7 @@
 
 <!-- ====== SCENE 02 / WARNING ====== -->
 <section class="scene" id="warning">
-  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=1600&q=70&auto=format&fit=crop')"></div>
   <div class="scene-overlay"></div>
 
   <div class="scene-inner">
@@ -574,23 +613,23 @@
     <h2 class="headline reveal">
       <span>STILL JUST</span>
       <span>ASKING AI?</span>
-      <span class="jp">まだ"聞くだけ"で止まっていないか。</span>
+      <span class="jp">こんな人のための90分です。</span>
     </h2>
-    <p class="lead reveal">正直に答えてほしい。ひとつでも当てはまるなら、このセミナーはあなたのためのものだ。</p>
+    <p class="lead reveal">難しい話はしません。ひとつでも当てはまるなら、来て損はありません。</p>
 
     <div class="warnings reveal">
-      <div class="line"><div class="n">— 01</div><div class="t">ChatGPTは触っている。でも結局、"質問する道具"で止まっている。</div></div>
-      <div class="line"><div class="n">— 02</div><div class="t">「AIエージェント」「Computer Use」と聞くが、正直よく分からない。</div></div>
-      <div class="line"><div class="n">— 03</div><div class="t">周りが「AIで業務が半分になった」と言い始めていて、焦りがある。</div></div>
-      <div class="line"><div class="n">— 04</div><div class="t">業務効率化を本気でやりたいが、何から手をつけるべきか分からない。</div></div>
-      <div class="line"><div class="n">— 05</div><div class="t">2026年という分岐点で、時代に置いていかれたくない。</div></div>
+      <div class="line"><div class="n">— 01</div><div class="t">ChatGPTすら、ほとんど触ったことがない。でも気になっている。</div></div>
+      <div class="line"><div class="n">— 02</div><div class="t">「AIエージェント」という言葉を聞くが、正直イメージが湧かない。</div></div>
+      <div class="line"><div class="n">— 03</div><div class="t">毎日の事務作業に2〜3時間取られていて、正直しんどい。</div></div>
+      <div class="line"><div class="n">— 04</div><div class="t">周りが「AIで仕事が半分になった」と言い始めていて、焦りがある。</div></div>
+      <div class="line"><div class="n">— 05</div><div class="t">情報が早すぎて、何を使えばいいのか分からない。</div></div>
     </div>
   </div>
 </section>
 
 <!-- ====== SCENE 03 / ERA ====== -->
 <section class="scene" id="era">
-  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=1600&q=70&auto=format&fit=crop')"></div>
   <div class="scene-overlay"></div>
 
   <div class="scene-inner">
@@ -601,7 +640,11 @@
       <span class="jp">AIは、動く時代へ。</span>
     </h2>
     <p class="lead reveal" style="max-width:680px">
-      2025年後半、AIは静かに、しかし決定的に進化した。ブラウザを自分で操作するAI、PCの画面を見て動くAI、メールを書き、予約を取り、資料を作るAI ― <strong>いわゆる「AIエージェント」</strong>が、エンジニアでなくても使える段階に入った。これは"未来の話"ではなく、<strong>今この瞬間、起きていること</strong>。知る者と知らない者の差は、半年で取り返しのつかない大きさになる。
+      今までのAIは、こちらが質問すれば答える「道具」でした。<br>
+      でも今のAIは違います。<strong>自分で調べ、自分で資料を作り、自分でアプリを動かす</strong>。<br>
+      驚くのは、それを実現するツールが<strong>すでに無料で転がっている</strong>ということ。<br>
+      知っている人は、もう使い始めている。知らない人は、存在すら気づいていない。<br>
+      この差が、半年で取り返しのつかない大きさになります。
     </p>
 
     <div class="btn-row reveal">
@@ -610,32 +653,56 @@
   </div>
 </section>
 
+<!-- ====== SCENE 03b / REAL NUMBERS ====== -->
+<section class="scene" id="numbers">
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=70&auto=format&fit=crop')"></div>
+  <div class="scene-overlay"></div>
+
+  <div class="scene-inner">
+    <div class="eyebrow reveal">— REAL NUMBERS</div>
+    <h2 class="headline reveal">
+      <span>BEFORE</span>
+      <span>/ AFTER.</span>
+      <span class="jp">作るのはAI、人は待つだけ。</span>
+    </h2>
+    <p class="lead reveal">これは、盛った話ではありません。セミナー当日、実際のツールで全部見せます。</p>
+
+    <div class="warnings reveal">
+      <div class="line"><div class="n">— 01</div><div class="t">2時間かけていた資料作成 → <strong>10分で完了</strong></div></div>
+      <div class="line"><div class="n">— 02</div><div class="t">50個のPDFから情報を抜き出して一覧化 → <strong>3分</strong></div></div>
+      <div class="line"><div class="n">— 03</div><div class="t">競合リサーチ＋レポート作成 → <strong>寝ている間に完成</strong></div></div>
+      <div class="line"><div class="n">— 04</div><div class="t">複雑な議事録の要約・整形 → <strong>ひとことの指示で終わる</strong></div></div>
+      <div class="line"><div class="n">— 05</div><div class="t">アプリを開いて入力作業を繰り返す → <strong>AIが代わりに操作する</strong></div></div>
+    </div>
+  </div>
+</section>
+
 <!-- ====== SCENE 04 / PROGRAM ====== -->
 <section class="scene" id="program">
-  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1534996858221-380b92700493?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1534996858221-380b92700493?w=1600&q=70&auto=format&fit=crop')"></div>
   <div class="scene-overlay"></div>
 
   <div class="scene-inner">
     <div class="eyebrow reveal">— 120 MIN / 6 SEQUENCES</div>
     <h2 class="headline reveal">
       <span>THE MISSION.</span>
-      <span class="jp">90分で、AIに仕事を任せる感覚を掴む。</span>
+      <span class="jp">AIが「相談相手」から「作業者」に進化する。</span>
     </h2>
 
     <div class="program-list reveal">
-      <div class="row"><div class="time">20:00—20:10</div><div class="title">なぜ今、AIエージェントなのか ― 2026年の地殻変動</div><div class="tag">OPENING</div></div>
-      <div class="row"><div class="time">20:10—20:35</div><div class="title">AIがブラウザを操作する ― リサーチから資料化までの完全自動化</div><div class="tag">DEMO 01</div></div>
-      <div class="row"><div class="time">20:35—21:00</div><div class="title">メール・議事録・事務作業を任せる ― 日常業務の自動化</div><div class="tag">DEMO 02</div></div>
-      <div class="row"><div class="time">21:00—21:25</div><div class="title">業種別ユースケース ― 営業 / 事務 / 建設現場での実践</div><div class="tag">USE CASE</div></div>
-      <div class="row"><div class="time">21:25—21:45</div><div class="title">はじめ方ロードマップ ― 失敗しないための注意点</div><div class="tag">ROADMAP</div></div>
-      <div class="row"><div class="time">21:45—22:00</div><div class="title">質疑応答 ― その場で疑問にすべて答える</div><div class="tag">Q &amp; A</div></div>
+      <div class="row"><div class="time">20:00—20:10</div><div class="title">そもそも「AIエージェント」って何？ ― 初心者のための3分解説</div><div class="tag">OPENING</div></div>
+      <div class="row"><div class="time">20:10—20:35</div><div class="title">【DEMO 01】資料を自動で作るAI ― プレゼン・提案書・報告書を"ひとこと"で</div><div class="tag">TOOL 01</div></div>
+      <div class="row"><div class="time">20:35—21:00</div><div class="title">【DEMO 02】リサーチから資料化まで ― 一気通貫で仕上げるAI</div><div class="tag">TOOL 02</div></div>
+      <div class="row"><div class="time">21:00—21:25</div><div class="title">【DEMO 03】アプリを操作するAI ― 入力・整理・繰り返し作業を任せる</div><div class="tag">TOOL 03</div></div>
+      <div class="row"><div class="time">21:25—21:45</div><div class="title">今日から使えるツール一覧 ― 全部、無料で始められる</div><div class="tag">STARTER KIT</div></div>
+      <div class="row"><div class="time">21:45—22:00</div><div class="title">質疑応答 ― 何を聞いてもOK</div><div class="tag">Q &amp; A</div></div>
     </div>
   </div>
 </section>
 
 <!-- ====== SCENE 05 / SPEAKER ====== -->
 <section class="scene" id="speaker">
-  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1520869562399-e772f042f422?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-bg" style="background-image:url('https://images.unsplash.com/photo-1520869562399-e772f042f422?w=1600&q=70&auto=format&fit=crop')"></div>
   <div class="scene-overlay"></div>
 
   <div class="scene-inner">
@@ -658,7 +725,7 @@
       </div>
       <div class="bio">
         <p>リフォーム会社の営業から独立し、<strong>建設業の現場経験 × AI活用</strong>を軸に活動。「専門用語を使わずに、現場の言葉でAIを語れる」ことを強みに、経営者・個人事業主・非エンジニア層への導入支援を行う。</p>
-        <p>株式会社ノヴァリスでは、代表・宮澤隆平のもとで<strong>AI事業を統括</strong>。"AIに詳しい人"ではなく、"現場を知った上でAIを使う人間"として、机上論ではない実装の現実をそのまま伝える。</p>
+        <p>株式会社ノヴァリスでは、代表・宮澤隆平のもとで<strong>AI事業を統括</strong>。"AIに詳しい人"ではなく、"現場を知った上でAIを使う人間"として、机上論ではない実装の現実をそのまま伝える。「専門用語を使わずに話すこと」には特にこだわっており、<strong>"一度聞けば初心者でもイメージが掴める"</strong>と言われることが多い。</p>
       </div>
     </div>
   </div>
@@ -666,7 +733,7 @@
 
 <!-- ====== SCENE 06 / FINAL ====== -->
 <section class="scene" id="apply">
-  <div class="scene-bg animate" style="background-image:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80&auto=format&fit=crop')"></div>
+  <div class="scene-bg animate" style="background-image:url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1600&q=70&auto=format&fit=crop')"></div>
   <div class="scene-overlay"></div>
 
   <div class="scene-inner">
@@ -677,9 +744,9 @@
       <span class="jp">半年後、後悔しないために。</span>
     </h1>
     <p class="lead reveal">
-      2026年は、自動化の年。<br>
-      その入り口を、まずは90分だけ覗きに来てほしい。<br>
-      <strong>無料。失うものは、何もない。</strong>
+      <strong>無料です。見ているだけでOKです。カメラも発言も、いりません。</strong><br>
+      2026年が自動化の年になるかどうか、まずは90分だけ、その目で確かめてください。<br>
+      失うものは、何もありません。
     </p>
 
     <div class="hud-row reveal">
@@ -689,12 +756,24 @@
       <div class="cell"><span class="label">FEE</span><span class="value">FREE</span></div>
     </div>
 
+    <div class="made-with-ai reveal">
+      <div class="tag">MADE WITH AI</div>
+      <div class="msg">このウェブサイトは、<br><strong>AIで10分で作りました。</strong></div>
+    </div>
 
-    <div style="margin-top:60px;max-width:900px">
+    <div style="margin-top:20px;max-width:900px">
       <div class="faq reveal">
         <details>
           <summary><span class="q">ChatGPTもあまり触ったことがないのですが、大丈夫ですか？</span><span class="plus">+</span></summary>
-          <p>大丈夫です。デモ中心の構成なので、"見て理解する"ところから始められます。専門用語は最小限に抑え、現場の言葉でお伝えします。</p>
+          <p><strong>大丈夫です。むしろ、そういう方のための無料セミナーです。</strong>デモを見ているだけで「AIエージェントとは何か」がイメージできるように構成しています。専門用語は使いません。</p>
+        </details>
+        <details>
+          <summary><span class="q">カメラや発言は必要ですか？</span><span class="plus">+</span></summary>
+          <p>不要です。カメラオフ・音声ミュートのまま、見ているだけでOKです。顔出しや自己紹介は一切ありません。</p>
+        </details>
+        <details>
+          <summary><span class="q">何を準備すればいいですか？</span><span class="plus">+</span></summary>
+          <p><strong>Zoomが開けるPCがあれば一番おすすめです</strong>（当日紹介するツールを、一緒にその場で触ってみたい方向け）。見るだけの参加なら、スマホ・タブレットでも問題ありません。事前インストールは特に必要ありません。</p>
         </details>
         <details>
           <summary><span class="q">録画視聴はできますか？</span><span class="plus">+</span></summary>
@@ -702,11 +781,7 @@
         </details>
         <details>
           <summary><span class="q">紹介されるツールは有料ですか？</span><span class="plus">+</span></summary>
-          <p>無料で始められるツールを中心にご紹介します。有料ツールを扱う場合も、無料版の試し方から丁寧にお伝えします。</p>
-        </details>
-        <details>
-          <summary><span class="q">セミナー中に営業されますか？</span><span class="plus">+</span></summary>
-          <p>個別相談のご案内はいたしますが、強引な営業や高額商品の販売は一切ありません。安心してご参加ください。</p>
+          <p><strong>紹介するのは、全て無料で始められるツールです。</strong>セミナーが終わったその日から、そのまま自分で触って試せます。</p>
         </details>
       </div>
     </div>
@@ -758,7 +833,7 @@
     });
   },{threshold:.15});
   document.querySelectorAll('.reveal').forEach((el,i)=>{
-    el.style.transitionDelay = (i%6 * 90)+'ms';
+    el.style.transitionDelay = (i%4 * 60)+'ms';
     io.observe(el);
   });
 
