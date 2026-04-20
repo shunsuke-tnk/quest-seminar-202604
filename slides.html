@@ -1,0 +1,1724 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NOVALIS / QUEST — バックエンド説明スライド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Light theme tokens — prioritise readability over atmosphere */
+    --bg:#eef1f6;
+    --surface:#ffffff;
+    --ink:#0f1420;
+    --ink-strong:#000;
+    --ink-soft:#4b5563;
+    --ink-mute:#9ca3af;
+    --ink-faint:#c4cad3;
+    --border:#e5e7eb;
+    --border-strong:#d1d5db;
+    --divider:#eef1f5;
+
+    /* Pink — NOVALIS / QUEST brand accent */
+    --pink:#ff2a82;
+    --pink-strong:#e6186d;
+    --pink-soft:#ffe4ef;
+    --pink-softer:#fff2f7;
+    --pink-border:#ffb3d4;
+
+    --green:#16a34a;
+    --green-bg:#dcfce7;
+
+    --jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+    --en:"Inter","Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--jp);
+    -webkit-font-smoothing:antialiased;
+    font-feature-settings:"palt";
+    letter-spacing:.01em;
+    overflow:hidden;
+    height:100%;
+  }
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+  }
+  ::selection{background:var(--pink);color:#fff}
+
+  /* =========================================================
+     DECK: 1920x1080 natural size. Auto-scaled to viewport via JS.
+  ========================================================= */
+  .deck{
+    position:relative;
+    width:1920px;height:1080px;
+    flex:0 0 auto;
+    container-type:size;
+    container-name:deck;
+    background:var(--bg);
+    overflow:hidden;
+    transform-origin:center center;
+    transform:scale(var(--fit, 1));
+  }
+  .slide{
+    position:absolute;inset:0;
+    padding:52px 80px 60px;
+    display:flex;flex-direction:column;
+    opacity:0;visibility:hidden;
+    transition:opacity .4s ease, visibility 0s linear .4s;
+  }
+  .slide.active{
+    opacity:1;visibility:visible;
+    transition:opacity .5s ease, visibility 0s linear 0s;
+  }
+
+  /* =========================================================
+     HEADER: pink eyebrow + black title (top-left)
+  ========================================================= */
+  .slide-head{
+    margin-bottom:28px;
+  }
+  .eyebrow{
+    font-family:var(--en);
+    font-weight:800;
+    font-size:32px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:var(--pink);
+    margin-bottom:14px;
+  }
+  h1.slide-title{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:84px;
+    line-height:1.12;
+    letter-spacing:-.005em;
+    color:var(--ink);
+  }
+  .slide-title small.quote{
+    display:block;
+    font-size:44px;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-top:10px;
+    letter-spacing:.02em;
+  }
+
+  /* =========================================================
+     COMMON: footer band
+  ========================================================= */
+  .footer-band{
+    margin-top:auto;
+    background:var(--ink-strong);
+    color:#fff;
+    padding:32px 36px;
+    border-radius:6px;
+    text-align:center;
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:38px;
+    letter-spacing:.04em;
+  }
+  .footer-band .pink-hl{
+    color:#fff;
+    background:var(--pink);
+    padding:4px 16px;
+    border-radius:4px;
+    margin:0 6px;
+  }
+  .footer-note-right{
+    font-family:var(--jp);
+    font-weight:500;
+    font-size:22px;
+    color:var(--ink-mute);
+    text-align:right;
+    margin-top:18px;
+  }
+
+  /* =========================================================
+     Shared .slide-body — fills remaining vertical space,
+     distributes content evenly to avoid top-heavy layout
+  ========================================================= */
+  .slide-body{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:0;
+  }
+
+  /* =========================================================
+     SLIDE 1: SERVICES — 2 cards
+  ========================================================= */
+  .services{
+    flex:1;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr;
+    gap:28px;
+    min-height:0;
+  }
+  .svc-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:38px 44px 36px;
+    display:flex;flex-direction:column;
+    box-shadow:0 1px 2px rgba(15,20,32,.04);
+  }
+  .svc-badge{
+    align-self:flex-start;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:28px;
+    letter-spacing:.1em;
+    color:var(--pink);
+    background:var(--pink-soft);
+    padding:12px 24px;
+    border-radius:999px;
+    margin-bottom:24px;
+  }
+  .svc-title{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:66px;
+    line-height:1.08;
+    letter-spacing:-.01em;
+    color:var(--ink);
+    margin-bottom:18px;
+  }
+  .svc-title.en{font-family:var(--en);font-weight:900;letter-spacing:-.01em}
+  .svc-tag{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:30px;
+    line-height:1.5;
+    color:var(--ink-soft);
+    padding-bottom:26px;
+    margin-bottom:28px;
+    border-bottom:1px solid var(--divider);
+  }
+  .svc-benefits{
+    list-style:none;
+    flex:1;
+    display:flex;flex-direction:column;
+    gap:20px;
+    margin-bottom:28px;
+  }
+  .svc-benefits li{
+    font-family:var(--jp);
+    font-weight:500;
+    font-size:32px;
+    line-height:1.45;
+    color:var(--ink);
+    padding-left:48px;
+    position:relative;
+  }
+  .svc-benefits li::before{
+    content:"✓";
+    position:absolute;
+    left:0;top:4px;
+    width:34px;height:34px;
+    border-radius:50%;
+    background:var(--pink-soft);
+    color:var(--pink);
+    font-weight:900;
+    font-size:20px;
+    display:flex;align-items:center;justify-content:center;
+    line-height:1;
+  }
+  .svc-price{
+    border-top:1px solid var(--divider);
+    padding-top:24px;
+    display:flex;align-items:baseline;justify-content:flex-end;
+    gap:8px;
+  }
+  .svc-price-num{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:88px;
+    color:var(--ink);
+    letter-spacing:-.02em;
+    line-height:1;
+  }
+  .svc-price-num .yen{font-size:.58em;margin-right:4px;vertical-align:4%}
+  .svc-price-tax{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:30px;
+    color:var(--ink-soft);
+  }
+
+  /* =========================================================
+     SLIDE 2: MARKET COMPARISON — Table
+  ========================================================= */
+  .catch-quote{
+    text-align:center;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:46px;
+    letter-spacing:.02em;
+    color:var(--ink);
+    margin:8px 0 26px;
+  }
+  .catch-quote::before{content:"「"}
+  .catch-quote::after{content:"」"}
+
+  .comp{
+    flex:1;
+    display:flex;flex-direction:column;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    min-height:0;
+  }
+  .comp-row{
+    display:grid;
+    grid-template-columns:1.5fr 1.2fr .9fr 1.1fr 1.2fr;
+    align-items:center;
+    flex:1;
+    border-bottom:1px solid var(--divider);
+    min-height:0;
+  }
+  .comp-row:last-child{border-bottom:none}
+  .comp-row.comp-head{
+    flex:0 0 auto;
+    background:#f7f9fc;
+    border-bottom:1px solid var(--border);
+  }
+  .comp-row.comp-head .comp-cell{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:26px;
+    color:var(--ink-soft);
+    letter-spacing:.06em;
+    padding:22px 28px;
+  }
+  .comp-cell{
+    padding:24px 28px;
+    font-family:var(--jp);
+    font-weight:500;
+    font-size:32px;
+    color:var(--ink);
+    line-height:1.3;
+  }
+  .comp-cell:first-child{
+    font-weight:700;
+    font-size:34px;
+  }
+  .comp-cell.comp-total{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:42px;
+    color:var(--ink);
+    letter-spacing:-.005em;
+  }
+  .comp-cell .sub{
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:26px;
+    color:var(--pink);
+    margin-top:10px;
+  }
+  .comp-cell .sub .ribbon{font-size:28px}
+
+  .comp-row.novalis{
+    background:var(--pink-softer);
+    border-top:2px solid var(--pink-border);
+    border-bottom:2px solid var(--pink-border);
+    position:relative;
+  }
+  .comp-row.novalis::before{
+    content:"";
+    position:absolute;left:0;top:0;bottom:0;
+    width:6px;
+    background:var(--pink);
+  }
+  .comp-row.novalis .comp-cell:first-child{color:var(--ink-strong)}
+  .comp-row.novalis .comp-total{
+    color:var(--pink);
+    font-size:46px;
+  }
+
+  /* =========================================================
+     SLIDE 3 / 5: EXCLUSIVE PRICING
+  ========================================================= */
+  .price-hero{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:24px 56px;
+    text-align:center;
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .price-hero-row{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:24px;
+    width:100%;
+  }
+  .price-hero-cell{
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+  }
+  .price-hero-cell .ph-label{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:30px;
+    color:var(--ink-soft);
+    letter-spacing:.04em;
+  }
+  .price-hero-cell.old .ph-num{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:88px;
+    line-height:1;
+    color:var(--ink-mute);
+    letter-spacing:-.02em;
+    text-decoration:line-through;
+    text-decoration-thickness:4px;
+  }
+  .price-hero-cell.old .ph-num .yen{font-size:.58em;margin-right:2px}
+  .price-hero-cell.new .ph-label{
+    color:var(--pink);
+    font-weight:900;
+    font-size:32px;
+  }
+  .price-hero-cell.new .ph-num{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:140px;
+    line-height:1;
+    color:var(--pink);
+    letter-spacing:-.02em;
+  }
+  .price-hero-cell.new .ph-num .yen{font-size:.56em;margin-right:4px;vertical-align:5%}
+  .price-hero-cell.new .ph-num .tax{
+    font-size:.22em;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-left:10px;
+    letter-spacing:.02em;
+  }
+  .price-hero-arrow{
+    width:120px;height:90px;
+    background:var(--pink);
+    clip-path:polygon(0 35%, 55% 35%, 55% 5%, 100% 50%, 55% 95%, 55% 65%, 0 65%);
+    filter:drop-shadow(0 4px 12px rgba(255,42,130,.25));
+  }
+  .price-old-line{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:34px;
+    color:var(--ink-mute);
+    text-decoration:line-through;
+    text-decoration-thickness:2px;
+    margin-bottom:14px;
+  }
+  .price-old-line .num{margin-left:14px}
+  .price-main{
+    display:flex;align-items:baseline;justify-content:center;gap:22px;
+    margin-bottom:18px;
+  }
+  .price-main-label{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:44px;
+    color:var(--ink);
+  }
+  .price-main-num{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:136px;
+    line-height:1;
+    letter-spacing:-.02em;
+    color:var(--pink);
+  }
+  .price-main-num .yen{font-size:.56em;margin-right:4px;vertical-align:5%}
+  .price-main-tax{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:34px;
+    color:var(--ink-soft);
+  }
+  .price-off{
+    display:inline-block;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:34px;
+    color:#fff;
+    background:var(--pink);
+    padding:14px 32px;
+    border-radius:999px;
+    letter-spacing:.02em;
+  }
+
+  /* Annual total breakdown + savings */
+  .annual-box{
+    background:var(--pink-softer);
+    border:2px solid var(--pink-border);
+    border-radius:12px;
+    padding:20px 40px 22px;
+    text-align:center;
+  }
+  .annual-head{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:46px;
+    color:var(--pink);
+    letter-spacing:.02em;
+    margin-bottom:10px;
+  }
+  .annual-head .boom{margin-right:10px}
+  .annual-head .big{font-size:58px;margin-left:10px;letter-spacing:-.01em}
+  .annual-breakdown{
+    font-family:var(--jp);
+    font-weight:500;
+    font-size:26px;
+    color:var(--ink-soft);
+    margin-bottom:20px;
+    letter-spacing:.02em;
+  }
+  .annual-savings{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  .save-item{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:30px;
+    color:var(--ink);
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    padding:18px 24px;
+    background:#fff;
+    border-radius:8px;
+    border:1px solid var(--pink-border);
+  }
+  .save-item .check{
+    font-size:30px;
+    color:var(--green);
+  }
+  .save-item .amt{color:var(--pink);font-size:34px;margin:0 4px}
+
+  /* Conditions */
+  .cond-row{
+    display:flex;align-items:stretch;gap:0;
+    background:var(--surface);
+    border:1.5px solid var(--ink);
+    border-radius:12px;
+    padding:18px 22px;
+  }
+  .cond-item{
+    flex:1;
+    display:flex;flex-direction:column;gap:8px;
+    padding:0 18px;
+    text-align:center;
+    justify-content:center;
+  }
+  .cond-label{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:24px;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+  }
+  .cond-text{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:32px;
+    color:var(--ink);
+    display:flex;align-items:center;justify-content:center;gap:10px;
+  }
+  .cond-conn{
+    display:flex;align-items:center;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:26px;
+    color:var(--ink-mute);
+    padding:0 12px;
+    letter-spacing:.08em;
+  }
+
+  /* =========================================================
+     SLIDE 4: EXCLUSIVE BONUS
+  ========================================================= */
+  .bonus-note-top{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:30px;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-bottom:14px;
+  }
+  .bonus-hero{
+    position:relative;
+    background:var(--surface);
+    border:2px solid var(--pink-border);
+    border-radius:12px;
+    padding:26px 48px 30px;
+    text-align:center;
+    margin-bottom:18px;
+  }
+  .bonus-badge-tr{
+    position:absolute;top:22px;right:26px;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:26px;
+    color:#fff;
+    background:var(--pink);
+    padding:10px 24px;
+    border-radius:999px;
+    letter-spacing:.02em;
+  }
+  .bonus-from{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:32px;
+    color:var(--ink-mute);
+    margin-bottom:8px;
+  }
+  .bonus-price-old{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:42px;
+    color:var(--ink-mute);
+    text-decoration:line-through;
+    text-decoration-thickness:2px;
+    margin-bottom:10px;
+  }
+  .bonus-arrow{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:44px;
+    color:var(--pink);
+    margin:4px 0 12px;
+    line-height:1;
+  }
+  .bonus-big{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:124px;
+    line-height:.95;
+    letter-spacing:-.02em;
+    color:var(--pink);
+    margin-bottom:12px;
+  }
+  .bonus-sub{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:32px;
+    color:var(--ink);
+  }
+
+  .bonus-items{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:16px;
+  }
+  .bonus-item{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px 24px;
+    display:flex;align-items:center;gap:18px;
+  }
+  .bonus-icon{
+    font-size:50px;
+    line-height:1;
+  }
+  .bonus-text{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:30px;
+    line-height:1.35;
+    color:var(--ink);
+  }
+  .bonus-bottom-note{
+    font-family:var(--jp);
+    font-weight:500;
+    font-size:26px;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-bottom:18px;
+    letter-spacing:.02em;
+  }
+
+  /* =========================================================
+     SLIDE DARK VARIANT (used by Slide 1)
+  ========================================================= */
+  .slide.dark{
+    background:#0b0f1a;
+  }
+  .slide.dark::before{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at top right, rgba(255,42,130,.18), transparent 60%),
+               radial-gradient(ellipse at bottom left, rgba(80,140,255,.10), transparent 55%);
+    pointer-events:none;
+  }
+  .slide.dark > *{position:relative;z-index:1}
+  .slide.dark h1.slide-title{color:#fff}
+  .slide.dark .intro-lead{color:rgba(255,255,255,.78)}
+  .slide.dark .intro-lead strong{color:var(--pink)}
+  .slide.dark .intro-cost-head-text{color:#fff}
+  .slide.dark .intro-cost-head::before,
+  .slide.dark .intro-cost-head::after{background:rgba(255,255,255,.18)}
+  .slide.dark .intro-cost-card{
+    background:#161c2c;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 4px 18px rgba(0,0,0,.3);
+  }
+  .slide.dark .intro-cost-card .cost-school{color:#fff}
+  .slide.dark .intro-cost-card .cost-tag{
+    color:rgba(255,255,255,.5);
+    border-bottom-color:rgba(255,255,255,.08);
+  }
+  .slide.dark .intro-cost-card .cost-label{color:rgba(255,255,255,.62)}
+  .slide.dark .intro-cost-card .cost-value{color:#fff}
+  .slide.dark .intro-cost-card .cost-value .unit{color:rgba(255,255,255,.5)}
+  .slide.dark .intro-cost-card .cost-total{border-top-color:rgba(255,255,255,.18)}
+  .slide.dark .intro-cost-card .cost-total-label{color:rgba(255,255,255,.5)}
+  .slide.dark .intro-cost-card .cost-total-value{color:var(--pink)}
+  .slide.dark .footer-note-right{color:rgba(255,255,255,.4)}
+
+  /* =========================================================
+     SLIDE 1 (NEW): INTRO — continuous learning + market cost
+  ========================================================= */
+  .intro-lead{
+    margin:4px 0 18px;
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:30px;
+    line-height:1.55;
+    color:var(--ink-soft);
+    letter-spacing:.02em;
+    max-width:1500px;
+  }
+  .intro-lead strong{color:var(--pink);font-weight:900}
+  .intro-cost-head{
+    display:flex;align-items:center;gap:18px;
+    margin:4px 0 14px;
+  }
+  .intro-cost-head::before,
+  .intro-cost-head::after{
+    content:"";flex:1;height:1px;background:var(--border-strong);
+  }
+  .intro-cost-head-text{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:34px;
+    color:var(--ink);
+    letter-spacing:.04em;
+  }
+  .intro-cost-head-text .hi{color:var(--pink);margin:0 4px}
+  .intro-cost-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+    flex:1;
+    min-height:0;
+  }
+  .intro-cost-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:34px 42px 30px;
+    display:flex;flex-direction:column;
+    box-shadow:0 1px 2px rgba(15,20,32,.04);
+  }
+  .intro-cost-card .cost-school{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:48px;
+    color:var(--ink);
+    letter-spacing:-.005em;
+    margin-bottom:8px;
+  }
+  .intro-cost-card .cost-tag{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:26px;
+    color:var(--ink-mute);
+    padding-bottom:22px;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--divider);
+  }
+  .intro-cost-card .cost-rows{
+    display:flex;flex-direction:column;gap:14px;
+    margin-bottom:18px;
+  }
+  .intro-cost-card .cost-row{
+    display:flex;align-items:baseline;justify-content:space-between;
+    gap:16px;
+  }
+  .intro-cost-card .cost-label{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:28px;
+    color:var(--ink-soft);
+  }
+  .intro-cost-card .cost-value{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:54px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+    line-height:1;
+  }
+  .intro-cost-card .cost-value .yen{font-size:.58em;margin-right:2px}
+  .intro-cost-card .cost-value .unit{
+    font-size:.42em;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-left:4px;
+  }
+  .intro-cost-card .cost-total{
+    margin-top:auto;
+    padding-top:18px;
+    border-top:1px dashed var(--border-strong);
+    display:flex;align-items:baseline;justify-content:space-between;
+  }
+  .intro-cost-card .cost-total-label{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:24px;
+    color:var(--ink-soft);
+  }
+  .intro-cost-card .cost-total-value{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:48px;
+    color:var(--pink);
+    letter-spacing:-.01em;
+    line-height:1;
+  }
+  .intro-cost-card .cost-total-value .yen{font-size:.58em;margin-right:2px}
+
+  /* =========================================================
+     SLIDE 4 (REFRESHED): PROGRAM CONTENT
+  ========================================================= */
+  .program-flow{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:stretch;
+    gap:24px;
+    flex:1;
+    min-height:0;
+  }
+  .program-block{
+    background:var(--surface);
+    border:2px solid var(--pink-border);
+    border-radius:14px;
+    padding:28px 34px 30px;
+    display:flex;flex-direction:column;
+  }
+  .program-block.secondary{
+    border-color:var(--border);
+  }
+  .program-block .phase-tag{
+    align-self:flex-start;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:22px;
+    color:#fff;
+    background:var(--pink);
+    padding:8px 18px;
+    border-radius:999px;
+    letter-spacing:.08em;
+    margin-bottom:14px;
+  }
+  .program-block.secondary .phase-tag{
+    background:var(--ink);
+  }
+  .program-block .phase-title{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:44px;
+    line-height:1.15;
+    color:var(--ink);
+    letter-spacing:-.005em;
+    margin-bottom:6px;
+  }
+  .program-block .phase-sub{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:24px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--divider);
+  }
+  .program-block .phase-list{
+    list-style:none;
+    display:flex;flex-direction:column;gap:12px;
+  }
+  .program-block .phase-list li{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:24px;
+    line-height:1.4;
+    color:var(--ink);
+    padding-left:36px;
+    position:relative;
+  }
+  .program-block .phase-list li::before{
+    content:"✓";
+    position:absolute;left:0;top:2px;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:var(--pink-soft);
+    color:var(--pink);
+    font-weight:900;
+    font-size:16px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .program-block.secondary .phase-list li::before{
+    background:#e5e7eb;color:var(--ink);
+  }
+  .program-arrow{
+    align-self:center;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:54px;
+    color:var(--pink);
+    padding:0 4px;
+  }
+  .path-price{
+    margin-top:auto;
+    padding-top:20px;
+    border-top:1px dashed var(--border-strong);
+    display:flex;align-items:baseline;justify-content:center;gap:10px;
+  }
+  .path-price-num{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:84px;
+    color:var(--pink);
+    letter-spacing:-.02em;
+    line-height:1;
+  }
+  .path-price-num .yen{font-size:.58em;margin-right:2px}
+  .path-price-tax{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:26px;
+    color:var(--ink-soft);
+  }
+
+  /* =========================================================
+     SECTION TITLE SLIDE (chapter divider)
+  ========================================================= */
+  .slide.section-title{
+    background:#0b0f1a;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:80px;
+  }
+  .slide.section-title::before{
+    content:"";
+    position:absolute;inset:0;
+    background:radial-gradient(ellipse at center, rgba(255,42,130,.22), transparent 65%),
+               radial-gradient(ellipse at top right, rgba(80,140,255,.10), transparent 60%);
+    pointer-events:none;
+  }
+  .slide.section-title > *{position:relative;z-index:1}
+  .slide.section-title .section-eyebrow{
+    font-family:var(--en);
+    font-weight:800;
+    font-size:34px;
+    letter-spacing:6px;
+    text-transform:uppercase;
+    color:var(--pink);
+    margin-bottom:36px;
+    display:inline-block;
+    padding:14px 32px;
+    border:2px solid var(--pink);
+    border-radius:999px;
+  }
+  .slide.section-title .section-headline{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:140px;
+    line-height:1.15;
+    letter-spacing:-.005em;
+    color:#fff;
+    margin-bottom:36px;
+    text-shadow:0 0 40px rgba(255,42,130,.35),0 0 100px rgba(255,42,130,.18);
+  }
+  .slide.section-title .section-sub{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:36px;
+    color:rgba(255,255,255,.7);
+    letter-spacing:.04em;
+  }
+  .slide.section-title .section-divider{
+    width:120px;height:4px;
+    background:var(--pink);
+    margin:0 auto 32px;
+    border-radius:2px;
+    box-shadow:0 0 20px rgba(255,42,130,.6);
+  }
+
+  /* =========================================================
+     SLIDE 2 OVERRIDES: centered titles, larger text, block arrow
+  ========================================================= */
+  .slide[data-slide="2"] .program-block{
+    padding:30px 36px 28px;
+    align-items:center;
+    text-align:center;
+  }
+  .slide[data-slide="2"] .program-block .phase-tag{
+    align-self:center;
+    font-size:24px;
+    padding:10px 24px;
+    margin-bottom:14px;
+  }
+  .slide[data-slide="2"] .program-block .phase-title{
+    font-size:60px;
+    text-align:center;
+    line-height:1.1;
+    margin-bottom:12px;
+  }
+  .slide[data-slide="2"] .program-block .phase-sub{
+    font-size:26px;
+    text-align:center;
+    line-height:1.45;
+    padding-bottom:20px;
+    margin-bottom:22px;
+    width:100%;
+  }
+  .slide[data-slide="2"] .program-block .phase-list{
+    gap:14px;
+    align-self:stretch;
+    text-align:left;
+  }
+  .slide[data-slide="2"] .program-block .phase-list li{
+    font-size:28px;
+    padding-left:42px;
+    line-height:1.4;
+  }
+  .slide[data-slide="2"] .program-block .phase-list li::before{
+    width:30px;height:30px;
+    font-size:18px;
+    top:4px;
+  }
+  .slide[data-slide="2"] .program-flow{
+    grid-template-columns:1fr auto 1fr;
+    gap:18px;
+  }
+
+  /* =========================================================
+     SLIDE 6 OVERRIDES: match SLIDE 2 font scale
+  ========================================================= */
+  .slide[data-slide="6"] .program-block .phase-tag{
+    font-size:24px;
+    padding:10px 24px;
+    margin-bottom:14px;
+  }
+  .slide[data-slide="6"] .program-block .phase-title{
+    font-size:60px;
+    line-height:1.1;
+    margin-bottom:12px;
+  }
+  .slide[data-slide="6"] .program-block .phase-sub{
+    font-size:26px;
+    line-height:1.45;
+    padding-bottom:20px;
+    margin-bottom:22px;
+  }
+  .slide[data-slide="6"] .program-block .phase-list{
+    gap:14px;
+  }
+  .slide[data-slide="6"] .program-block .phase-list li{
+    font-size:28px;
+    padding-left:42px;
+    line-height:1.4;
+  }
+  .slide[data-slide="6"] .program-block .phase-list li::before{
+    width:30px;height:30px;
+    font-size:18px;
+    top:4px;
+  }
+  .block-arrow{
+    align-self:center;
+    width:120px;
+    height:110px;
+    background:var(--pink);
+    clip-path:polygon(0 32%, 55% 32%, 55% 4%, 100% 50%, 55% 96%, 55% 68%, 0 68%);
+    filter:drop-shadow(0 4px 10px rgba(255,42,130,.25));
+  }
+  .program-total{
+    margin-top:20px;
+    background:var(--pink-softer);
+    border:2px solid var(--pink-border);
+    border-radius:12px;
+    padding:22px 32px;
+    display:flex;align-items:center;justify-content:center;
+    gap:24px;
+  }
+  .program-total .pt-label{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:34px;
+    color:var(--ink);
+    letter-spacing:.02em;
+  }
+  .program-total .pt-label .accent{color:var(--pink)}
+  .program-total .pt-price{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:88px;
+    color:var(--pink);
+    letter-spacing:-.02em;
+    line-height:1;
+  }
+  .program-total .pt-price .yen{font-size:.58em;margin-right:2px}
+  .program-total .pt-price .tax{
+    font-size:.32em;
+    font-weight:700;
+    color:var(--ink-soft);
+    margin-left:8px;
+  }
+
+  /* =========================================================
+     SLIDE 5 (NEW): 3-PLAN COMPARISON
+  ========================================================= */
+  .plans{
+    flex:1;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:22px;
+    min-height:0;
+  }
+  .plan-card{
+    position:relative;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:34px 30px 32px;
+    display:flex;flex-direction:column;
+    box-shadow:0 1px 2px rgba(15,20,32,.04);
+  }
+  .plan-card.featured{
+    border:2px solid var(--pink);
+    background:var(--pink-softer);
+    box-shadow:0 4px 18px rgba(255,42,130,.18);
+  }
+  .plan-card .plan-ribbon{
+    position:absolute;
+    top:-18px;left:50%;transform:translateX(-50%);
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:22px;
+    color:#fff;
+    background:var(--pink);
+    padding:8px 22px;
+    border-radius:999px;
+    letter-spacing:.08em;
+    box-shadow:0 4px 10px rgba(255,42,130,.28);
+  }
+  .plan-card .plan-tag{
+    align-self:flex-start;
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:20px;
+    color:var(--pink);
+    background:var(--pink-soft);
+    padding:6px 16px;
+    border-radius:999px;
+    letter-spacing:.08em;
+    margin-bottom:14px;
+  }
+  .plan-card.featured .plan-tag{
+    color:#fff;background:var(--pink);
+  }
+  .plan-card .plan-name{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:38px;
+    line-height:1.15;
+    color:var(--ink);
+    letter-spacing:-.005em;
+    margin-bottom:4px;
+  }
+  .plan-card .plan-desc{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:22px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--divider);
+    min-height:56px;
+  }
+  .plan-card .plan-features{
+    list-style:none;
+    display:flex;flex-direction:column;gap:10px;
+    flex:1;
+    margin-bottom:20px;
+  }
+  .plan-card .plan-features li{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:22px;
+    line-height:1.4;
+    color:var(--ink);
+    padding-left:30px;
+    position:relative;
+  }
+  .plan-card .plan-features li::before{
+    content:"✓";
+    position:absolute;left:0;top:2px;
+    width:22px;height:22px;
+    border-radius:50%;
+    background:var(--pink-soft);
+    color:var(--pink);
+    font-weight:900;
+    font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .plan-card .plan-price{
+    border-top:1px solid var(--divider);
+    padding-top:18px;
+    display:flex;align-items:baseline;justify-content:center;gap:6px;
+  }
+  .plan-card .plan-price-num{
+    font-family:var(--jp);
+    font-weight:900;
+    font-size:72px;
+    color:var(--ink);
+    letter-spacing:-.02em;
+    line-height:1;
+  }
+  .plan-card.featured .plan-price-num{color:var(--pink)}
+  .plan-card .plan-price-num .yen{font-size:.58em;margin-right:2px}
+  .plan-card .plan-price-tax{
+    font-family:var(--jp);
+    font-weight:700;
+    font-size:22px;
+    color:var(--ink-soft);
+  }
+
+  /* =========================================================
+     NAV
+  ========================================================= */
+  .nav-bar{
+    position:fixed;
+    bottom:18px;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 28px;
+    z-index:50;
+    pointer-events:none;
+  }
+  .nav-hint{
+    font-family:var(--en);
+    font-weight:600;
+    font-size:14px;letter-spacing:1.6px;
+    text-transform:uppercase;
+    color:var(--ink-mute);
+    display:flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,.9);
+    padding:8px 14px;
+    border-radius:6px;
+    border:1px solid var(--border);
+    backdrop-filter:blur(6px);
+  }
+  .nav-hint kbd{
+    font-family:var(--en);
+    font-weight:700;font-size:13px;
+    padding:3px 8px;
+    border:1px solid var(--border-strong);
+    border-radius:3px;
+    color:var(--ink-soft);
+    background:#fff;
+  }
+  .page-indicator{
+    font-family:var(--en);
+    font-weight:800;
+    font-size:16px;letter-spacing:2.4px;
+    color:var(--ink);
+    display:flex;align-items:center;gap:10px;
+    pointer-events:auto;
+    background:rgba(255,255,255,.9);
+    padding:8px 16px;
+    border-radius:6px;
+    border:1px solid var(--border);
+    backdrop-filter:blur(6px);
+  }
+  .page-indicator .current{color:var(--pink)}
+  .page-indicator .bar{width:32px;height:1px;background:var(--border-strong)}
+
+  @media(max-width:900px){.nav-hint{display:none}}
+
+  /* =========================================================
+     PRINT / PDF: 1 slide per page at 1920x1080
+  ========================================================= */
+  @media print{
+    @page{
+      size:1920px 1080px;
+      margin:0;
+    }
+    html,body{
+      background:var(--bg);
+      overflow:visible !important;
+      height:auto !important;
+      display:block !important;
+    }
+    .deck{
+      width:1920px;
+      height:auto !important;
+      overflow:visible !important;
+      transform:none !important;
+    }
+    .slide{
+      position:relative !important;
+      inset:auto !important;
+      width:1920px !important;
+      height:1080px !important;
+      opacity:1 !important;
+      visibility:visible !important;
+      display:flex !important;
+      transform:none !important;
+      transition:none !important;
+      page-break-after:always;
+      break-after:page;
+      page-break-inside:avoid;
+      break-inside:avoid;
+    }
+    .slide:last-child{
+      page-break-after:auto;
+      break-after:auto;
+    }
+    .nav-bar{display:none !important}
+  }
+</style>
+</head>
+<body>
+<main class="deck" id="deck">
+
+  <!-- =========================================================
+       SLIDE 1 (NEW): INTRO — 継続的にAIを学ぶ場
+  ========================================================= -->
+  <section class="slide active dark" data-slide="1">
+    <header class="slide-head">
+      <div class="eyebrow">The Reality</div>
+      <h1 class="slide-title">AI学習って、<span style="color:var(--pink)">お金がかかる</span>・・・</h1>
+    </header>
+
+    <p class="intro-lead">
+      2026年。<strong>さすがにAIを学ばないといけない。</strong>AIの進化に乗り遅れるのはやばい。<br>
+      でも、無料ではいい情報がないし、学ぼうとすると<strong>高い・・・</strong>。
+    </p>
+
+    <div class="intro-cost-head">
+      <span class="intro-cost-head-text">現状、AIを学ぶには<span class="hi">これくらい</span>かかります</span>
+    </div>
+
+    <div class="intro-cost-grid">
+      <div class="intro-cost-card">
+        <div class="cost-school">Shift AI</div>
+        <div class="cost-tag">AI人材育成の大手スクール</div>
+        <div class="cost-rows">
+          <div class="cost-row">
+            <span class="cost-label">一括プラン</span>
+            <span class="cost-value"><span class="yen">¥</span>547,800</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">または月額</span>
+            <span class="cost-value"><span class="yen">¥</span>21,780<span class="unit">／月</span></span>
+          </div>
+        </div>
+        <div class="cost-total">
+          <span class="cost-total-label">年間総額（一括）</span>
+          <span class="cost-total-value"><span class="yen">¥</span>547,800</span>
+        </div>
+      </div>
+
+      <div class="intro-cost-card">
+        <div class="cost-school">ホリエモンAI学校</div>
+        <div class="cost-tag">堀江貴文氏監修のAIスクール</div>
+        <div class="cost-rows">
+          <div class="cost-row">
+            <span class="cost-label">入会金</span>
+            <span class="cost-value"><span class="yen">¥</span>162,800</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">月額</span>
+            <span class="cost-value"><span class="yen">¥</span>16,280<span class="unit">／月</span></span>
+          </div>
+        </div>
+        <div class="cost-total">
+          <span class="cost-total-label">年間総額（入会金＋月額×12）</span>
+          <span class="cost-total-value"><span class="yen">¥</span>358,160</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer-note-right">※2026年4月時点 各社公表価格に基づく／全て税抜表記</p>
+  </section>
+
+  <!-- =========================================================
+       SLIDE 2 (NEW): TWO LEARNING PATHS — bootcamp + community
+  ========================================================= -->
+  <section class="slide" data-slide="2">
+    <header class="slide-head">
+      <div class="eyebrow">Our Solution</div>
+      <h1 class="slide-title">だから、誰もが学べる場をつくりました。</h1>
+    </header>
+
+    <div class="slide-body">
+      <div class="program-flow">
+        <div class="program-block">
+          <span class="phase-tag">すぐに身につけたい人へ</span>
+          <div class="phase-title">ClaudeCode<br>ブートキャンプ</div>
+          <div class="phase-sub">たった2日で、ClaudeCodeを<br>使いこなせるようになる集中講座</div>
+          <ul class="phase-list">
+            <li>自分の業務を自動化できるようになる</li>
+            <li>自分でWEBサイトを自由に公開できるようになる</li>
+            <li>自分で自由にアプリを作れるようになる</li>
+            <li>Claude Codeの機能を理解し、使いこなせるようになる</li>
+          </ul>
+          <div class="path-price">
+            <span class="path-price-num"><span class="yen">¥</span>150,000</span>
+            <span class="path-price-tax">（税別）</span>
+          </div>
+        </div>
+
+        <div class="block-arrow" aria-hidden="true"></div>
+
+        <div class="program-block secondary">
+          <span class="phase-tag">じっくり身につけたい人へ</span>
+          <div class="phase-title">AI学習<br>コミュニティ</div>
+          <div class="phase-sub">学び続ける人のための、<br>伴走型コミュニティ</div>
+          <ul class="phase-list">
+            <li>専門家に質問し放題のチャット</li>
+            <li>毎月開催のワークショップ</li>
+            <li>アーカイブ見放題</li>
+            <li>学んでいる仲間同士の情報交換や繋がり</li>
+          </ul>
+          <div class="path-price">
+            <span class="path-price-num"><span class="yen">¥</span>5,000</span>
+            <span class="path-price-tax">／月（税別）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SLIDE 3: MARKET COMPARISON (updated: NOVALIS = ¥100,000)
+  ========================================================= -->
+  <section class="slide" data-slide="3">
+    <header class="slide-head">
+      <div class="eyebrow">Market Comparison</div>
+      <h1 class="slide-title">AI学習スクール 費用比較</h1>
+    </header>
+
+    <p class="catch-quote">NOVALISなら、この価格で"使いこなす"まで到達できる</p>
+
+    <div class="comp">
+      <div class="comp-row comp-head">
+        <div class="comp-cell">スクール名</div>
+        <div class="comp-cell">初期費用</div>
+        <div class="comp-cell">月額</div>
+        <div class="comp-cell">年間総額</div>
+        <div class="comp-cell">備考</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-cell">Shift AI</div>
+        <div class="comp-cell">¥547,800（一括）</div>
+        <div class="comp-cell">¥21,780</div>
+        <div class="comp-cell comp-total">¥547,800</div>
+        <div class="comp-cell">一括の場合</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-cell">Shift AI</div>
+        <div class="comp-cell">—</div>
+        <div class="comp-cell">¥21,780</div>
+        <div class="comp-cell comp-total">¥261,360</div>
+        <div class="comp-cell">月払いの場合</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-cell">ホリエモンAI学校</div>
+        <div class="comp-cell">¥162,800</div>
+        <div class="comp-cell">¥16,280</div>
+        <div class="comp-cell comp-total">¥358,160</div>
+        <div class="comp-cell">入会金＋月額×12</div>
+      </div>
+      <div class="comp-row novalis">
+        <div class="comp-cell">
+          NOVALIS
+          <span class="sub"><span class="ribbon">🎀</span>AIスクール</span>
+        </div>
+        <div class="comp-cell">¥150,000</div>
+        <div class="comp-cell">¥5,000</div>
+        <div class="comp-cell comp-total">¥210,000</div>
+        <div class="comp-cell">ブートキャンプ＋<br>1年間学び放題</div>
+      </div>
+    </div>
+
+    <p class="footer-note-right">※2026年4月時点 各社公表価格に基づく／全て税抜表記</p>
+  </section>
+
+  <!-- =========================================================
+       SLIDE 4 (NEW): SECTION DIVIDER — Quest members only
+  ========================================================= -->
+  <section class="slide section-title" data-slide="4">
+    <div class="section-divider"></div>
+    <div class="section-eyebrow">Special Offer</div>
+    <h1 class="section-headline">QUESTメンバー限定<br>のご提案</h1>
+    <p class="section-sub">— ここからは、特別なご案内です —</p>
+  </section>
+
+  <!-- =========================================================
+       SLIDE 5: EXCLUSIVE PRICING — ¥150k → ¥100k
+  ========================================================= -->
+  <section class="slide" data-slide="5">
+    <header class="slide-head">
+      <div class="eyebrow">Exclusive Pricing</div>
+      <h1 class="slide-title">QUESTメンバー限定特別価格</h1>
+    </header>
+
+    <div class="slide-body">
+      <div class="price-hero">
+        <div class="price-hero-row">
+          <div class="price-hero-cell old">
+            <span class="ph-label">通常価格</span>
+            <span class="ph-num"><span class="yen">¥</span>150,000</span>
+          </div>
+          <div class="price-hero-arrow" aria-hidden="true"></div>
+          <div class="price-hero-cell new">
+            <span class="ph-label">QUESTメンバー限定特別価格</span>
+            <span class="ph-num"><span class="yen">¥</span>100,000<span class="tax">（税抜）</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="annual-box">
+        <div class="annual-head"><span class="boom">💥</span>ブートキャンプ＋<span class="big">6ヶ月サポート</span>すべて込み</div>
+        <div class="annual-breakdown">単発のセミナーで終わらせず、"使いこなす"ところまで伴走するフルパッケージ</div>
+        <div class="annual-savings">
+          <div class="save-item">
+            <span class="check">✅</span>ホリエモンAI学校より<span class="amt">¥258,160</span>お得
+          </div>
+          <div class="save-item">
+            <span class="check">✅</span>Shift AI（一括）より<span class="amt">¥447,800</span>お得
+          </div>
+        </div>
+      </div>
+
+      <div class="cond-row">
+        <div class="cond-item">
+          <div class="cond-label">条件 1</div>
+          <div class="cond-text">🕒 本日中のお申込み</div>
+        </div>
+        <div class="cond-conn">または</div>
+        <div class="cond-item">
+          <div class="cond-label">条件 1&rsquo;</div>
+          <div class="cond-text">📅 本日中の個別面談ご希望</div>
+        </div>
+        <div class="cond-conn">かつ</div>
+        <div class="cond-item">
+          <div class="cond-label">条件 2</div>
+          <div class="cond-text">✅ クエストメンバー限定</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SLIDE 6: PROGRAM CONTENT — Bootcamp + 6-month support
+  ========================================================= -->
+  <section class="slide" data-slide="6">
+    <header class="slide-head">
+      <div class="eyebrow">Program Details</div>
+      <h1 class="slide-title">ご提供するサービスの中身</h1>
+    </header>
+
+    <div class="slide-body">
+      <div class="program-flow">
+        <div class="program-block">
+          <span class="phase-tag">PHASE 1 ／ 短期集中</span>
+          <div class="phase-title">ブートキャンプ</div>
+          <div class="phase-sub">2日間で、AIを"使える武器"にする</div>
+          <ul class="phase-list">
+            <li>AIツール操作の基礎（ChatGPT／Claude ほか）</li>
+            <li>業務に効く実践的プロンプト設計</li>
+            <li>AIエージェントの基本構築</li>
+            <li>自分の仕事に落とし込むハンズオン</li>
+            <li>忙しい人でも一気に習得できるカリキュラム</li>
+          </ul>
+        </div>
+
+        <div class="program-arrow">➜</div>
+
+        <div class="program-block secondary">
+          <span class="phase-tag">PHASE 2 ／ 6ヶ月継続</span>
+          <div class="phase-title">6ヶ月間のサポート</div>
+          <div class="phase-sub">学びを定着させ、実務で使いこなすまで伴走</div>
+          <ul class="phase-list">
+            <li>月1回のフォローアップワークショップ（計6回）</li>
+            <li>聞き放題のチャットサポート</li>
+            <li>定期的な最新情報・活用事例の発信</li>
+            <li>個別相談でつまずきを都度解消</li>
+            <li>学習コンテンツの継続アクセス</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="program-total">
+        <div class="pt-label">このすべてを、クエストメンバー限定 <span class="accent">特別価格</span> で</div>
+        <div class="pt-price"><span class="yen">¥</span>100,000<span class="tax">（税抜）</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       SLIDE 7 (NEW): 3-PLAN COMPARISON — casual options
+  ========================================================= -->
+  <section class="slide" data-slide="7">
+    <header class="slide-head">
+      <div class="eyebrow">Flexible Options</div>
+      <h1 class="slide-title">もっとカジュアルに学びたい方へ</h1>
+    </header>
+
+    <p class="intro-lead" style="margin-top:0;margin-bottom:18px;font-size:30px">
+      「ブートキャンプだけ試したい」「もう少し短期間のサポートで十分」という方向けに、<strong>3つのプラン</strong>をご用意しました。
+    </p>
+
+    <div class="plans">
+      <article class="plan-card">
+        <span class="plan-tag">LIGHT</span>
+        <div class="plan-name">AI完全攻略スクール<br>ライト</div>
+        <div class="plan-desc">短めの伴走でまず試したい方に</div>
+        <ul class="plan-features">
+          <li>ブートキャンプ（2日間）</li>
+          <li>3ヶ月間のサポート</li>
+          <li>チャット質問対応</li>
+          <li>フォローアップワークショップ</li>
+        </ul>
+        <div class="plan-price">
+          <span class="plan-price-num"><span class="yen">¥</span>80,000</span>
+          <span class="plan-price-tax">＋税</span>
+        </div>
+      </article>
+
+      <article class="plan-card featured">
+        <span class="plan-ribbon">★ おすすめ</span>
+        <span class="plan-tag">FULL</span>
+        <div class="plan-name">AI完全攻略スクール</div>
+        <div class="plan-desc">しっかり定着させたい方向けのフルパッケージ</div>
+        <ul class="plan-features">
+          <li>ブートキャンプ（2日間）</li>
+          <li><strong>6ヶ月間</strong>のサポート</li>
+          <li>月1回ワークショップ（計6回）</li>
+          <li>聞き放題のチャットサポート</li>
+          <li>個別相談・継続アクセス</li>
+        </ul>
+        <div class="plan-price">
+          <span class="plan-price-num"><span class="yen">¥</span>100,000</span>
+          <span class="plan-price-tax">＋税</span>
+        </div>
+      </article>
+
+      <article class="plan-card">
+        <span class="plan-tag">BOOTCAMP</span>
+        <div class="plan-name">ブートキャンプ<br>単体</div>
+        <div class="plan-desc">短期集中だけをピンポイントで</div>
+        <ul class="plan-features">
+          <li>ブートキャンプ（2日間）</li>
+          <li>実務即戦力のハンズオン</li>
+          <li>サポートなし</li>
+        </ul>
+        <div class="plan-price">
+          <span class="plan-price-num"><span class="yen">¥</span>50,000</span>
+          <span class="plan-price-tax">＋税</span>
+        </div>
+      </article>
+    </div>
+
+    <p class="footer-note-right" style="margin-top:14px">※いずれもクエストメンバー限定価格／税抜表記</p>
+  </section>
+
+</main>
+
+<!-- Nav -->
+<div class="nav-bar">
+  <div class="nav-hint"><kbd>←</kbd><kbd>→</kbd><span>で切替</span></div>
+  <div class="page-indicator">
+    <span class="current" id="page-current">01</span>
+    <span class="bar"></span>
+    <span class="total">07</span>
+  </div>
+</div>
+
+<script>
+  (function(){
+    const slides = document.querySelectorAll('.slide');
+    const current = document.getElementById('page-current');
+    let idx = 0;
+    const total = slides.length;
+
+    // Auto-fit deck to viewport
+    function fitDeck(){
+      const w = window.innerWidth / 1920;
+      const h = window.innerHeight / 1080;
+      const scale = Math.min(w, h, 1);
+      document.documentElement.style.setProperty('--fit', scale);
+    }
+    fitDeck();
+    window.addEventListener('resize', fitDeck);
+
+    function go(next){
+      const target = Math.max(0, Math.min(total - 1, next));
+      if(target === idx) return;
+      slides[idx].classList.remove('active');
+      slides[target].classList.add('active');
+      idx = target;
+      current.textContent = String(idx + 1).padStart(2, '0');
+    }
+
+    window.addEventListener('keydown', (e)=>{
+      switch(e.key){
+        case 'ArrowRight': case 'PageDown': case ' ': case 'Enter':
+          e.preventDefault(); go(idx + 1); break;
+        case 'ArrowLeft': case 'PageUp': case 'Backspace':
+          e.preventDefault(); go(idx - 1); break;
+        case '1': go(0); break;
+        case '2': go(1); break;
+        case '3': go(2); break;
+        case '4': go(3); break;
+        case '5': go(4); break;
+        case '6': go(5); break;
+        case '7': go(6); break;
+        case 'Home': go(0); break;
+        case 'End': go(total - 1); break;
+      }
+    });
+
+    document.addEventListener('click', (e)=>{
+      if(e.target.closest('a,button,kbd')) return;
+      const x = e.clientX;
+      if(x > window.innerWidth / 2) go(idx + 1);
+      else go(idx - 1);
+    });
+  })();
+</script>
+</body>
+</html>

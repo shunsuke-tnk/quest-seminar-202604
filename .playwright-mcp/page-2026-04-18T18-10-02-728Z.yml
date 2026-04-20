@@ -1,0 +1,38 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: Services
+        - heading "2つの学びのカタチ" [level=1] [ref=e6]
+      - generic [ref=e7]:
+        - article [ref=e8]:
+          - generic [ref=e9]: 短期集中型
+          - heading "Claude Code Bootcamp" [level=2] [ref=e10]
+          - paragraph [ref=e11]: 2日間で、Claude Code を使える武器にする
+          - list [ref=e12]:
+            - listitem [ref=e13]: ✓ 2日間の短期集中カリキュラム
+            - listitem [ref=e14]: ✓ 実務で即使えるハンズオン
+            - listitem [ref=e15]: ✓ 忙しい人でも一気に習得
+          - generic [ref=e16]:
+            - generic [ref=e17]: ¥150,000
+            - generic [ref=e18]: （税抜）
+        - article [ref=e19]:
+          - generic [ref=e20]: 継続型
+          - heading "月額コミュニティ" [level=2] [ref=e21]
+          - paragraph [ref=e22]: 学び続ける人のための、月額コミュニティ
+          - list [ref=e23]:
+            - listitem [ref=e24]: ✓ 月1回のワークショップ
+            - listitem [ref=e25]: ✓ 定期的な情報発信
+            - listitem [ref=e26]: ✓ 聞き放題のチャットサポート
+          - generic [ref=e27]:
+            - generic [ref=e28]: ¥5,000
+            - generic [ref=e29]: ／月（税抜）
+      - generic [ref=e30]: 短期集中 × 継続学習 — 2つの組み合わせで学習効果を最大化
+  - generic:
+    - generic:
+      - generic: ←
+      - generic: →
+      - generic: で切替
+    - generic [ref=e31]:
+      - generic [ref=e32]: "01"
+      - generic [ref=e34]: "04"

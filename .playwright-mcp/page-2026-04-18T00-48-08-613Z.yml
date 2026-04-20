@@ -1,0 +1,72 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: Our Plans
+        - generic [ref=e6]: QUEST/Seminar 2026
+      - heading "4 Plans" [level=1] [ref=e7]
+      - paragraph [ref=e8]: あなたに合う、4つのプラン。すべてClaude Code Bootcampが土台です。
+      - generic [ref=e9]:
+        - article [ref=e10]:
+          - generic [ref=e12]: Plan A
+          - heading "Claude Code Bootcamp" [level=3] [ref=e13]
+          - paragraph [ref=e14]: AI活用の基礎を短期集中で身につける、もっともコンパクトなプラン。
+          - list [ref=e15]:
+            - listitem [ref=e16]:
+              - strong [ref=e17]: Claude Code Bootcamp
+              - text: 本編
+            - listitem [ref=e18]: 卒業後は月額 ¥5,000+税 で継続学習可
+          - generic [ref=e19]:
+            - generic [ref=e20]: ¥50,000
+            - generic [ref=e21]: +税
+        - article [ref=e22]:
+          - generic [ref=e24]: Plan B
+          - heading "3ヶ月プログラム" [level=3] [ref=e25]
+          - paragraph [ref=e26]: Bootcamp＋3ヶ月の情報発信サポート。アウトプットで学びを定着。
+          - list [ref=e27]:
+            - listitem [ref=e28]:
+              - strong [ref=e29]: Claude Code Bootcamp
+              - text: 本編
+            - listitem [ref=e30]: 3ヶ月の情報発信伴走（SNS・ブログ）
+            - listitem [ref=e31]: 毎週のフィードバック
+          - generic [ref=e32]:
+            - generic [ref=e33]: ¥80,000
+            - generic [ref=e34]: +税
+        - article [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37]: Plan C
+            - generic [ref=e38]: ★ Recommended
+          - heading "半年プログラム" [level=3] [ref=e39]
+          - paragraph [ref=e40]: Bootcamp＋半年の伴走で、習慣化とブランド形成まで一気通貫。
+          - list [ref=e41]:
+            - listitem [ref=e42]:
+              - strong [ref=e43]: Claude Code Bootcamp
+              - text: 本編
+            - listitem [ref=e44]: 半年の情報発信伴走（SNS・ブログ）
+            - listitem [ref=e45]: コミュニティへの常時アクセス
+          - generic [ref=e46]:
+            - generic [ref=e47]: ¥100,000
+            - generic [ref=e48]: +税
+        - article [ref=e49]:
+          - generic [ref=e51]: Plan D
+          - heading "AI収益化プラン" [level=3] [ref=e52]
+          - paragraph [ref=e53]: Bootcamp＋収益化カリキュラム。学びを"仕事"に変える個別最適プラン。
+          - list [ref=e54]:
+            - listitem [ref=e55]:
+              - strong [ref=e56]: Claude Code Bootcamp
+              - text: 本編
+            - listitem [ref=e57]: AIで稼ぐコース（個別最適化）
+            - listitem [ref=e58]: 案件獲得・提案の実践支援
+          - generic [ref=e60]: 要相談
+      - generic [ref=e61]:
+        - generic [ref=e62]: 金額はすべて税抜表示
+        - generic [ref=e64]: ワークショップご紹介でさらに割引
+        - generic [ref=e66]: 分割払いはリボ払いでご対応
+  - generic:
+    - generic:
+      - generic: ←
+      - generic: →
+      - generic: で切替
+    - generic [ref=e67]:
+      - generic [ref=e68]: "01"
+      - generic [ref=e70]: "02"

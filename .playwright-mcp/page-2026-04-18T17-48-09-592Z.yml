@@ -1,0 +1,40 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: Services
+        - generic [ref=e6]: NOVALIS/QUEST 2026
+      - heading "Services" [level=1] [ref=e7]
+      - paragraph [ref=e8]: 2つの学びのカタチ
+      - generic [ref=e9]:
+        - article [ref=e10]:
+          - generic [ref=e11]: 短期集中型
+          - heading "Claude Code Bootcamp" [level=3] [ref=e12]
+          - paragraph [ref=e13]: "\"2日間で、Claude Codeを使える武器にする\""
+          - list [ref=e14]:
+            - listitem [ref=e15]: 2日間の短期集中カリキュラム
+            - listitem [ref=e16]: 実務で即使えるハンズオン
+            - listitem [ref=e17]: 忙しい人でも一気に習得
+          - generic [ref=e18]:
+            - generic [ref=e19]: ¥150,000
+            - generic [ref=e20]: （税抜）
+        - article [ref=e21]:
+          - generic [ref=e22]: 継続型
+          - heading "月額コミュニティ" [level=3] [ref=e23]
+          - paragraph [ref=e24]: "\"学び続ける人のための、月額コミュニティ\""
+          - list [ref=e25]:
+            - listitem [ref=e26]: 月1回のワークショップ
+            - listitem [ref=e27]: 定期的な情報発信
+            - listitem [ref=e28]: 聞き放題のチャットサポート
+          - generic [ref=e29]:
+            - generic [ref=e30]: ¥5,000
+            - generic [ref=e31]: ／月（税抜）
+      - generic [ref=e32]: 短期集中 × 継続学習 — 2つの組み合わせで学習効果を最大化
+  - generic:
+    - generic:
+      - generic: ←
+      - generic: →
+      - generic: で切替
+    - generic [ref=e33]:
+      - generic [ref=e34]: "01"
+      - generic [ref=e36]: "04"

@@ -1,0 +1,48 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: Backend Programs
+        - generic [ref=e6]: QUEST/Seminar 2026
+      - heading "Your Next Step" [level=1] [ref=e7]
+      - paragraph [ref=e8]: 次のステップ：AIを"使える自分"になる4つの道
+      - generic [ref=e9]:
+        - article [ref=e10]:
+          - generic [ref=e11]: Plan 01
+          - heading "ブートキャンプ" [level=3] [ref=e12]
+          - paragraph [ref=e13]: AI活用の基礎を短期集中で習得。明日から業務で使える型を身につける。
+          - list [ref=e14]:
+            - listitem [ref=e15]: ChatGPTを"使いこなす"側に回るプロンプト設計
+            - listitem [ref=e16]: 業務定型タスクの自動化テンプレート
+            - listitem [ref=e17]: 同じ志の仲間と一緒に走れる学習環境
+        - article [ref=e18]:
+          - generic [ref=e19]: Plan 02
+          - heading "+ 3ヶ月 情報発信サポート" [level=3] [ref=e20]
+          - paragraph [ref=e21]: ブートキャンプ＋3ヶ月の発信伴走。アウトプットで学びを定着させる。
+          - list [ref=e22]:
+            - listitem [ref=e23]: SNS・ブログで"届く発信"の型が身につく
+            - listitem [ref=e24]: 毎週のフィードバックで迷わず継続
+            - listitem [ref=e25]: 発信実績がキャリアの証明になる
+        - article [ref=e26]:
+          - generic [ref=e27]: Plan 03 — Recommended
+          - heading "+ 半年 情報発信サポート" [level=3] [ref=e28]
+          - paragraph [ref=e29]: ブートキャンプ＋半年の長期伴走。習慣化とブランド形成まで一気通貫。
+          - list [ref=e30]:
+            - listitem [ref=e31]: 半年で発信が"習慣"になる
+            - listitem [ref=e32]: あなた個人のブランドが育つ
+            - listitem [ref=e33]: コミュニティに常時アクセスできる
+        - article [ref=e34]:
+          - generic [ref=e35]: Plan 04 — 要相談
+          - heading "+ AIで稼ぐコース" [level=3] [ref=e36]
+          - paragraph [ref=e37]: 基礎＋収益化カリキュラム。学びを"仕事"に変える個別最適プログラム。
+          - list [ref=e38]:
+            - listitem [ref=e39]: 収益化までの具体ステップを設計
+            - listitem [ref=e40]: あなたの状況に合わせた個別最適化
+            - listitem [ref=e41]: 案件獲得・提案の実践支援
+      - generic [ref=e42]:
+        - generic [ref=e43]: 卒業後 ¥5,000+税/月 のサブスクで継続学習
+        - generic [ref=e45]: ワークショップご紹介でさらに割引
+        - generic [ref=e47]: 分割払いはリボ払いでご対応
+  - generic [ref=e48]:
+    - generic [ref=e49]: "01"
+    - generic [ref=e51]: "02"
